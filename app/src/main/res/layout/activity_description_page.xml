@@ -6,16 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".DescriptionPage">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="45dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="15dp"
-        android:layout_height="40dp"
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_chevron_left_24" />
 
 
     <LinearLayout
@@ -23,61 +14,75 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-
         <LinearLayout
             android:id="@+id/topbanner"
+            android:paddingBottom="20dp"
             android:layout_width="match_parent"
             android:layout_height="279dp"
             android:layout_weight="0"
             android:background="@drawable/blurimg"
             android:orientation="horizontal"
-
             >
-
-
-            <ImageView
-                android:id="@+id/imageView17"
-                android:layout_width="97dp"
-                android:layout_height="155dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="100dp"
-                android:layout_weight="0"
-
-                app:srcCompat="@drawable/image9"
-                tools:srcCompat="@drawable/desmanga" />
+           <androidx.cardview.widget.CardView
+               android:layout_width="120dp"
+               android:layout_height="180dp"
+               android:layout_marginLeft="20dp"
+               android:layout_marginTop="80dp"
+               android:layout_weight="0"
+               app:cardCornerRadius="15dp"
+               >
+               <ImageView
+                   android:layout_width="120dp"
+                   android:layout_height="180dp"
+                   android:layout_weight="0"
+                   app:srcCompat="@drawable/fallbackimg"
+                   />
+               <ImageView
+                   android:id="@+id/imgCoverDes"
+                   android:layout_width="120dp"
+                   android:layout_height="180dp"
+                   android:layout_weight="0"
+                   app:srcCompat="@drawable/fallbackimg"
+                   />
+           </androidx.cardview.widget.CardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="209dp"
-                android:layout_weight="0"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/textNameDes"
                     android:layout_width="wrap_content"
-                    android:layout_height="4dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="100dp"
-                    android:layout_weight="1"
-                    android:text="Shrouding The Heavens"
+                    android:layout_weight="0"
+                    android:text=""
                     android:textColor="#fff"
                     android:textSize="23sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
-                <TextView
-                    android:id="@+id/textView4"
+                <LinearLayout
+                    android:id="@+id/altTitles"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="To You, the Immortal"
-                    android:textColor="#fff"
-                    android:textSize="15sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+<!--                    <TextView-->
+
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="10dp"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:layout_weight="0"-->
+<!--                        android:text="To You, the Immortal"-->
+<!--                        android:textColor="#fff"-->
+<!--                        android:textSize="15sp"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent" />-->
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
@@ -86,6 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:scrollbars="none"
             >
 
 
@@ -267,7 +273,6 @@
                         android:layout_weight="0"
                         android:text="Tác giả"
                         android:textColor="#fff"
-
                         android:textSize="15sp" />
 
                     <TextView
@@ -317,27 +322,111 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView8"
+                    android:id="@+id/textDes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="15dp"
                     android:layout_marginTop="20dp"
                     android:textSize="17sp"
-                    android:textColor="#fff"
-
                     android:lineSpacingMultiplier="1.2"
-                    android:text="\t\t\t\tDuring a field trip, an incident happened to Ye Fan and his classmates, transporting them to Mars
-Fearful for their lives, everybody panicked, except for Ye Fan and his friend Pang Bo
-With death and betrayal surrounding him, will Ye Fan's wit and calm composure lead them to safety?" />
+                  />
 
 
             </LinearLayout>
         </ScrollView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ccc" />
+        <GridLayout
+            app:columnCount="3"
+            android:paddingBottom="10dp"
+            android:paddingTop="6dp"
 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                >
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+
+                    app:srcCompat="@drawable/baseline_download_24" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tải xuống"
+                    android:textColor="#fff"
+                    android:textSize="13dp"
+                    android:gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                >
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/book" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mục lục"
+                    android:textColor="#fff"
+                    android:textSize="13dp"
+                    android:gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                >
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+
+                    app:srcCompat="@drawable/outline_playlist_add_24" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Thêm vào kệ"
+                    android:textColor="#fff"
+
+                    android:gravity="center"/>
+            </LinearLayout>
+
+
+
+        </GridLayout>
 
 
 
     </LinearLayout>
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="15dp"
 
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_chevron_left_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

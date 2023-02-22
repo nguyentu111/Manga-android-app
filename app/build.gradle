@@ -41,5 +41,6 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")
     //load image from url to imageView
     implementation 'com.squareup.picasso:picasso:2.8'
-
+    //loading animation
+    implementation ("com.github.ybq:Android-SpinKit:1.4.0")
 }

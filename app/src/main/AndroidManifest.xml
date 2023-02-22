@@ -13,7 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
-
+        <activity
+            android:name=".DescriptionPage"
+            android:exported="true"/>
+        <activity
+            android:name=".ChapterPage"
+            android:exported="true"/>
 
         <activity
             android:name=".MainActivity"
