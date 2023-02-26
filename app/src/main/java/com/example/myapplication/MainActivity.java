@@ -7,17 +7,14 @@ import androidx.gridlayout.widget.GridLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -26,10 +23,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.github.ybq.android.spinkit.SpinKitView;
-import com.github.ybq.android.spinkit.sprite.Sprite;
-import com.github.ybq.android.spinkit.style.CubeGrid;
-import com.github.ybq.android.spinkit.style.FoldingCube;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -47,28 +40,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ///////////
-//        GridLayout mangaLayout = findViewById(R.id.gridmangas);
-//        final int childCount = mangaLayout.getChildCount();
-//        for (int i = 0; i < childCount; i++) {
-//            View v = mangaLayout.getChildAt(i);
-//            v.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent intent =  new Intent(MainActivity.this,DescriptionPage.class);
-//                    startActivity(intent);
-//                }
-//            });
-        //////////////
-
-                gridView= findViewById(R.id.gridview);
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        );
+        gridView= findViewById(R.id.gridview);
         context = getApplicationContext();
         loadMangas();
 
 
     }
     private void loadMangas(){
-        String url="https://api.mangadex.org/manga?limit=50";
+        String url="https://api.mangadex.org/manga?limit=50&includes[]=author&includes[]=artist&includes[]=cover_art";
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -102,13 +87,18 @@ public class MainActivity extends AppCompatActivity {
                                 cardView.setRadius(20);
                                 String mangaId = data.getString("id");
                                 JSONArray relationships = data.getJSONArray("relationships");
-                                String imgId="";
+
+                                String imgUrl=null;
                                 for(int j =0;j<relationships.length();j++){
                                     if(relationships.getJSONObject(j).getString("type").equals("cover_art")){
-                                        imgId=relationships.getJSONObject(j).getString("id");
+                                        imgUrl= "https://uploads.mangadex.org/covers/"+mangaId+"/"+relationships.getJSONObject(j).getJSONObject("attributes").getString("fileName");
+                                        Picasso.get()
+                                                .load(imgUrl)
+                                                .resize(imgWidth, imgHeight)
+                                                .centerCrop()
+                                                .into(imgView);
                                     }
                                 }
-                                loadImg(mangaId,imgId,imgView,cardView);
                                 cardView.addView(imgView);
 
                                 manga.addView(cardView);
@@ -139,12 +129,15 @@ public class MainActivity extends AppCompatActivity {
                                 info.addView(mangaName);
                                 info.addView(mangaLastChap);
                                 manga.addView(info);
-                            manga.setOnClickListener(new View.OnClickListener() {
+                                String finalImgUrl = imgUrl;
+                                manga.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     Intent i = new Intent(MainActivity.this, DescriptionPage.class);
-                                    i.putExtra("data",data);
+                                    i.putExtra("data",data.toString());
+                                    i.putExtra("imgUrl", finalImgUrl);
                                     startActivity(i);
+
                                 }
                             });
                                 //////////
@@ -168,39 +161,6 @@ public class MainActivity extends AppCompatActivity {
                 });
         queue.add(jsonObjectRequest);
     }
-    private void loadImg(String mangaId,String imgId,ImageView img,CardView cardView){
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://api.mangadex.org/cover/" +imgId;
-        TextView textView = findViewById(R.id.textview);
-        int imgWidth = (gridView.getMeasuredWidth()-(gridLayoutGap*6))/3;
-        int imgHeight =(int) imgWidth *3 / 2;
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONObject data=   response.getJSONObject("data");
-                            String imgUrl = "https://uploads.mangadex.org/covers/"+mangaId+"/"+data.getJSONObject("attributes").getString("fileName");
-                            Picasso.get()
-                                    .load(imgUrl)
-                                    .resize(imgWidth, imgHeight)
-                                    .centerCrop()
-                                    .into(img);
-
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-
-                    }
-                });
-        queue.add(jsonObjectRequest);
-    }
     private void loadLastChapter(String mangaId,TextView textView){
 
         String url = "https://api.mangadex.org/manga/"+mangaId+"/feed";
@@ -212,21 +172,32 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             float maxChapter =0;
                             JSONArray datas=   response.getJSONArray("data");
-                            for(int i=0;i<datas.length();i++){
-                                String f = datas.getJSONObject(i).getJSONObject("attributes").getString("chapter");
-                                if(!f.equals("null")){
-                                    float chap = Float.parseFloat(f);
-                                    if(maxChapter<chap) maxChapter=chap;
-                                }
 
-                            }
-                            if(maxChapter==0.0)  textView.setText("Oneshot");
-                            else {
-                                if((int) maxChapter % 1 ==0)  textView.setText("Chap "+Float.toString((int) maxChapter));
-                                    else textView.setText("Chap "+Float.toString(maxChapter));
-                            };
+                               for(int i=0;i<datas.length();i++){
+                                   try{
+                                       String f = datas.getJSONObject(i).getJSONObject("attributes").getString("chapter");
+                                       if(!f.equals("null")){
+                                           float chap = Float.parseFloat(f);
+                                           if(maxChapter<chap) maxChapter=chap;
+                                       }else  {
+                                           textView.setText("Oneshot");
+                                           return;
+                                       };
+                                       if(maxChapter==0.0)  textView.setText("Chapter 0");
+                                       else {
+                                           if((int) maxChapter % 1 ==0)  textView.setText("Chap "+Float.toString((int) maxChapter));
+                                           else textView.setText("Chap "+Float.toString(maxChapter));
+                                       };
+                                   }catch (NumberFormatException  e){
+                                        Log.v("chapter parse string to float error,string value :",datas.getJSONObject(i).getJSONObject("attributes").getString("chapter"));
+                                       String f = datas.getJSONObject(i).getJSONObject("attributes").getString("chapter");
+
+                                        continue;
+                                   }
+                               }
                         } catch (JSONException e) {
-                            throw new RuntimeException(e);
+
+                            //throw new RuntimeException(e);
                         }
                     }
                 }, new Response.ErrorListener() {

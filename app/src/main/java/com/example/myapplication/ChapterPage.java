@@ -1,8 +1,11 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.animation.ValueAnimator;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 
@@ -29,57 +32,41 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChapterPage extends AppCompatActivity {
     Button showbtn;
+    LinearLayout mainLayout;
     LinearLayout showRs;
-    String url;
+    JSONArray data;
+    String mangaId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapter_page);
-        showbtn = findViewById(R.id.showbtn);
-        showRs = findViewById(R.id.showRs);
-        showRs.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        setShowRs();
-
-        url="https://api.mangadex.org/manga";
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        TextView textView = findViewById(R.id.textview);
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray datas=   response.getJSONArray("data");
-                            for(int i =0;i<datas.length();i++){
-                                JSONObject data = datas.getJSONObject(i);
-                                Log.v("data: ",data.getString("id"));
-                            }
-                            textView.setText("Response is: " + response.getString("data"));
-                            Log.v("id",response.getString("data"));
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                        textView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        showbtn.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-
-                    }
-                });
-        queue.add(jsonObjectRequest);
-// Access the RequestQueue through your singleton class.
-      //  MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
-            loadImg();
+        Bundle extras = getIntent().getExtras();
+        mainLayout = findViewById(R.id.main);
+        String dataStr = extras.getString("data");
+        mangaId = extras.getString("mangaId");
+        Log.v("mângId::",mangaId);
+        try {
+            if(dataStr !=null) data = new JSONArray(dataStr);
+            loadChapters();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
     private void setShowRs(){
         int mesuredHeight = showRs.getMeasuredHeight();
@@ -122,13 +109,237 @@ public class ChapterPage extends AppCompatActivity {
             }
         });
     }
-    private void loadImg(){
-        ImageView imageView = findViewById(R.id.testImgView);
-        Picasso.get()
-                .load("https://mangadex.org/covers/2db4e1e8-8776-4596-9d90-70291f2545a1/c7896b32-3cc8-47eb-9f7d-4442d9455cbd.png")
+    private void loadChapters() throws JSONException {
+        if(data==null){
+            callApi();
+            return;
+        }
+
+        Map<String, Map<String,List<JSONObject>>> grouped_chapters = group_chapters_by_volume_and_chapter();
+        List<String> sortedKeys=new ArrayList(grouped_chapters.keySet());
+        sort_volume(sortedKeys);
+       // sort_volume(v);
+        for(String key: sortedKeys){
+            LinearLayout header_volume = new LinearLayout(this);
+            header_volume.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            header_volume.setLayoutParams(params);
+            ////////////////////////////////volume name
+            TextView volumeName = new TextView(this);
+            if(key.equals("null")){
+                volumeName.setText("No volume");
+            }else{
+                volumeName.setText("Volume "+key);
+            }
+            volumeName.setTextSize(20);
+            volumeName.setTextColor(Color.WHITE);
+            LinearLayout.LayoutParams paramsText1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,  1.0f);
+            volumeName.setLayoutParams(paramsText1);
+            header_volume.addView(volumeName);
+            ///////////////////////////////total chap of volume
+            TextView totalChap = new TextView(this);
+            int total=0;
+            for(String v: grouped_chapters.get(key).keySet()){
+                total+=  grouped_chapters.get(key).get(v).size();
+            }
+            totalChap.setText(String.valueOf(total));
+            totalChap.setTextSize(20);
+            totalChap.setTextColor(Color.WHITE);
+            LinearLayout.LayoutParams paramsText2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            totalChap.setLayoutParams(paramsText2);
+            header_volume.addView(totalChap);
+            /////////////////////////////////
+            mainLayout.addView(header_volume);
+
+            ///////////////////////chapter in volume
+            LinearLayout chapter_volume = new LinearLayout(this);
+            chapter_volume.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            chapter_volume.setLayoutParams(params1);
+            List<String> sortedKeysChapter=new ArrayList(grouped_chapters.get(key).keySet());
+            sort_chapter(sortedKeysChapter);
+            for(String chapterKey: sortedKeysChapter){
+                List<JSONObject> chapters = grouped_chapters.get(key).get(chapterKey);
+                if(chapters.size()>1){
+                    TextView chapterName = new TextView(this);
+                    String chapStr = chapters.get(0).getJSONObject("attributes").getString("chapter");
+                    if(chapStr.equals("null")){
+                        chapterName.setText("One shot");
+                    }else{
+                        chapterName.setText("Chapter "+chapStr);
+                    }
+                    chapterName.setTextSize(15);
+                    chapterName.setTextColor(Color.WHITE);
+                    LinearLayout.LayoutParams paramsText3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,  1.0f);
+                    chapterName.setLayoutParams(paramsText3);
+                    chapter_volume.addView(chapterName);
+                }
+                for(JSONObject chapter: chapters){
+                    String title = chapter.getJSONObject("attributes").getString("title");
+                    CardView card = new CardView(this);
+                    card.setRadius(20);
+                    LinearLayout.LayoutParams paramsCard = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    paramsCard.setMargins(0,8,0,8);
+                    card.setLayoutParams(paramsCard);
+                    LinearLayout one_chap_layout = new LinearLayout(this);
+                    one_chap_layout.setOrientation(LinearLayout.VERTICAL);
+                    LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    one_chap_layout.setPadding(20,20,20,20);
+                    one_chap_layout.setLayoutParams(params2);
+                    one_chap_layout.setBackgroundColor(Color.parseColor("#2F3032"));
+                    //////  flag :
 
 
-                .into(imageView);
+                    ////////////////
+                    ////text chapter
+                    TextView chapterName = new TextView(this);
+                    String chapStr = chapter.getJSONObject("attributes").getString("chapter");
+                    if(title.equals("null") || title.toString().trim().equals("") ){
+                        if(chapters.size()==1){
+                            if(chapStr.equals("null")){
+                                chapterName.setText("One shot");
+                            }else{
+                                chapterName.setText("Ch."+chapStr);
+                            }
+                        }else{
+                            chapterName.setText("Ch. "+chapStr);
+                        }
+                    }else{
+                        if(chapters.size()==1){
+                            chapterName.setText("Ch."+chapStr+" - "+title);
+                        }else{
+                           // chapterName.setText("Ch."+chapStr+" - "+title);
+                            chapterName.setText(title);
+                        }
+                       // chapterName.setText(title);
+                    }
+                    chapterName.setTextSize(15);
+                    chapterName.setTextColor(Color.WHITE);
+                    LinearLayout.LayoutParams paramsText3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,  1.0f);
+                    chapterName.setLayoutParams(paramsText3);
+                    one_chap_layout.addView(chapterName);
+                    String chapterId = chapter.getString("id");
+                    one_chap_layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent i = new Intent(ChapterPage.this, ReadManga.class);
+                            i.putExtra("chapterId",chapterId);
+                            startActivity(i);
+                        }
+                    });
+                    card.addView(one_chap_layout);
+                    ////////
+                    chapter_volume.addView(card);
+                }
+
+            }
+            mainLayout.addView(chapter_volume);
+//            for(String chapter : grouped_chapters.get(volume).keySet()){
+//              //  Log.v(volume +" / "+"chapter",grouped_chapters.get(volume).get(chapter).toString());
+//            }
+
+        }
+
+
+    }
+
+
+
+    private void callApi(){
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "https://api.mangadex.org/manga/"+mangaId+"/feed?limit=100&order%5Bvolume%5D=desc&order%5Bchapter%5D=desc";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            data = response.getJSONArray("data");
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        try {
+                            loadChapters();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+    private void sort_volume(List<String> v) {
+        v.sort(new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+
+                if(s.equals("null")) return -1;
+                else if(t1.equals("null")) return 1;
+                float fs = Float.parseFloat(s);
+                float ft = Float.parseFloat(t1);
+                if(fs>ft) return -1;//ko doi
+                else return 1;
+            }
+        });
+    }
+    private  void  sort_chapter(List<String> l){
+        l.sort(new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+
+                if(s.equals("null")) return 1;
+                else if(t1.equals("null")) return -1;
+                float fs = Float.parseFloat(s);
+                float ft = Float.parseFloat(t1);
+                if(fs>ft) return -1;//ko doi
+                else return 1;
+            }
+        });
+
+    }
+    private  Map<String, Map<String,List<JSONObject>>> group_chapters_by_volume_and_chapter() throws JSONException {
+        Map<String, Map<String,List<JSONObject>>> result = new TreeMap<String, Map<String,List<JSONObject>>>();
+        for(int i =0;i<data.length();i++){
+            String volume = data.getJSONObject(i).getJSONObject("attributes").getString("volume");
+            String chapter = data.getJSONObject(i).getJSONObject("attributes").getString("chapter");
+            Map<String,List<JSONObject>> items = result.get(volume);
+            if(items == null){
+                items =  new TreeMap<String,List<JSONObject>>();
+                result.put(volume, items);
+            }
+            List<JSONObject> chapters_in_volume = items.get(chapter);
+            if(chapters_in_volume==null){
+                chapters_in_volume=  new ArrayList<JSONObject>();
+            }
+            chapters_in_volume.add( data.getJSONObject(i));
+            items.put(data.getJSONObject(i).getJSONObject("attributes").getString("chapter"),chapters_in_volume);
+        }
+        //sort chapter by descending but remain grouped:
+//        for(String volume : result.keySet()) {
+//            Log.v("///volume", "");
+//
+//            for (String chapter : result.get(volume).keySet()) {
+//                List<JSONObject> l = result.get(volume).get(chapter);
+//                Collections.sort(l, new Comparator<JSONObject>() {
+//                    public int compare(JSONObject o1, JSONObject o2) {
+//                        // compare two instance of `Score` and return `int` as result.
+//                        try {
+//                            return o2.getJSONObject("attributes").getString("chapter").compareTo(o1.getJSONObject("attributes").getString("chapter"));
+//                        } catch (JSONException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
+//                });
+//
+//            }
+//        }
+
+        return result;
     }
 
 }

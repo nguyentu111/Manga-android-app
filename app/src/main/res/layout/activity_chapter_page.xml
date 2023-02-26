@@ -23,106 +23,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/baseline_chevron_left_24" />
-
-<!--        <ScrollView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1"-->
-<!--            >-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical"-->
-<!--                android:layout_marginHorizontal="20dp"-->
-<!--                >-->
-
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:orientation="vertical">-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:orientation="horizontal">-->
-
-<!--                        <TextView-->
-<!--                            android:id="@+id/textView9"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:textColor="#fff"-->
-<!--                            android:textSize="20dp"-->
-
-<!--                            android:text="No volumn" />-->
-<!--                        <TextView-->
-<!--                            android:id="@+id/textView9"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_weight="0"-->
-<!--                            android:textColor="#fff"-->
-<!--                            android:textSize="20dp"-->
-
-<!--                            android:text="3" />-->
-
-<!--                    </LinearLayout>-->
-<!--                </LinearLayout>-->
-<!--            </LinearLayout>-->
-<!--        </ScrollView>-->
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <Button
-                    android:id="@+id/showbtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="show"/>
-
-            </LinearLayout>
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-               android:id="@+id/showRs"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:paddingBottom="30dp"
+                android:paddingHorizontal="15dp"
+                android:id="@+id/main"
                 android:orientation="vertical"
-
-                >
-
-                <TextView
-                    android:id="@+id/textview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="test"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="test"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="test"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="test"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             </LinearLayout>
-
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/testImgView"
-            android:layout_width="300dp"
-            android:layout_height="350dp"
-            tools:srcCompat="@tools:sample/avatars" />
+        </ScrollView>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

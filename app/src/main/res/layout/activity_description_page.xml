@@ -46,44 +46,53 @@
                    />
            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textNameDes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="100dp"
-                    android:layout_weight="0"
-                    android:text=""
-                    android:textColor="#fff"
-                    android:textSize="23sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                <ScrollView
+                    android:scrollbars="none"
+                    android:paddingTop="80dp"
+                    android:paddingLeft="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <LinearLayout
-                    android:id="@+id/altTitles"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/textNameDes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
 
-<!--                    <TextView-->
 
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="10dp"-->
-<!--                        android:layout_marginTop="10dp"-->
-<!--                        android:layout_weight="0"-->
-<!--                        android:text="To You, the Immortal"-->
-<!--                        android:textColor="#fff"-->
-<!--                        android:textSize="15sp"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintStart_toStartOf="parent" />-->
-                </LinearLayout>
-            </LinearLayout>
+                            android:layout_weight="0"
+                            android:text=""
+                            android:textColor="#fff"
+                            android:textSize="23sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <LinearLayout
+                            android:id="@+id/altTitles"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!--                    <TextView-->
+
+                            <!--                        android:layout_width="wrap_content"-->
+                            <!--                        android:layout_height="wrap_content"-->
+                            <!--                        android:layout_marginLeft="10dp"-->
+                            <!--                        android:layout_marginTop="10dp"-->
+                            <!--                        android:layout_weight="0"-->
+                            <!--                        android:text="To You, the Immortal"-->
+                            <!--                        android:textColor="#fff"-->
+                            <!--                        android:textSize="15sp"-->
+                            <!--                        app:layout_constraintEnd_toEndOf="parent"-->
+                            <!--                        app:layout_constraintStart_toStartOf="parent" />-->
+                        </LinearLayout>
+                    </LinearLayout>
+                </ScrollView>
+
 
         </LinearLayout>
 
@@ -98,7 +107,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:paddingBottom="30dp"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="@+id/topbanner"
                 tools:layout_editor_absoluteX="8dp"
@@ -111,7 +120,6 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView3"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -120,79 +128,15 @@
                         android:textColor="#fff"
 
                         android:textSize="15sp" />
-
-                    <LinearLayout
+                    <com.nex3z.flowlayout.FlowLayout
+                        android:id="@+id/flowTheloai"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:divider="@drawable/margin"
-                            android:orientation="horizontal"
-
-                            android:showDividers="middle">
-
-                            <TextView
-                                android:id="@+id/textView6"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:background="#373737"
-                                android:padding="4dp"
-                                android:text="Action"
-                                android:textColor="#fff"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:id="@+id/textView7"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:background="#373737"
-                                android:padding="4dp"
-                                android:text="Scifi"
-                                android:textColor="#fff"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:id="@+id/textView6"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:background="#373737"
-                                android:padding="4dp"
-                                android:text="Adventure"
-                                android:textColor="#fff"
-                                android:textSize="15sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="10dp"
-                            android:divider="@drawable/margin"
-                            android:orientation="horizontal"
-                            android:showDividers="middle">
-
-
-                            <TextView
-                                android:id="@+id/textView7"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:background="#373737"
-                                android:padding="4dp"
-                                android:text="Fantasy"
-                                android:textColor="#fff"
-                                android:textSize="15sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-
+                        app:flChildSpacing="13dp"
+                        app:flChildSpacingForLastRow="align"
+                        app:flRowSpacing="8dp">
+                    </com.nex3z.flowlayout.FlowLayout>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_marginVertical="4dp"
@@ -202,7 +146,6 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView3"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -211,17 +154,16 @@
                         android:textColor="#fff"
 
                         android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
+                    <com.nex3z.flowlayout.FlowLayout
+                        android:id="@+id/flowTrangthai"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:background="#373737"
-                        android:padding="4dp"
-                        android:text="Ongoing"
-                        android:textColor="#fff"
-                        android:textSize="15sp" />
+                        app:flChildSpacing="13dp"
+                        app:flChildSpacingForLastRow="align"
+                        app:flRowSpacing="8dp">
+                    </com.nex3z.flowlayout.FlowLayout>
+
 
 
                 </LinearLayout>
@@ -234,7 +176,6 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView3"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -244,16 +185,15 @@
 
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
+                    <com.nex3z.flowlayout.FlowLayout
+                        android:id="@+id/flowDinhdang"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:background="#373737"
-                        android:padding="4dp"
-                        android:text="Adaption"
-                        android:textColor="#fff"
-                        android:textSize="15sp" />
+                        app:flChildSpacing="13dp"
+                        app:flChildSpacingForLastRow="align"
+                        app:flRowSpacing="8dp">
+                    </com.nex3z.flowlayout.FlowLayout>
 
 
                 </LinearLayout>
@@ -275,19 +215,18 @@
                         android:textColor="#fff"
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
+                    <com.nex3z.flowlayout.FlowLayout
+                        android:id="@+id/flowTacgia"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:background="#373737"
-                        android:padding="4dp"
-                        android:text="Sakakibara monssho"
-                        android:textColor="#fff"
-                        android:textSize="15sp" />
+                        app:flChildSpacing="13dp"
+                        app:flChildSpacingForLastRow="align"
+                        app:flRowSpacing="8dp"/>
 
 
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_marginVertical="4dp"
@@ -297,26 +236,25 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/textView333"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="0"
-                        android:text="Loại tạp chí"
+                        android:text="Chủ đề"
                         android:textColor="#fff"
 
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
+                    <com.nex3z.flowlayout.FlowLayout
+                        android:id="@+id/flowChude"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:background="#373737"
-                        android:padding="4dp"
-                        android:text="Shounen"
-                        android:textColor="#fff"
-                        android:textSize="15sp" />
+                        app:flChildSpacing="13dp"
+                        app:flChildSpacingForLastRow="align"
+                        app:flRowSpacing="8dp">
+                    </com.nex3z.flowlayout.FlowLayout>
 
 
                 </LinearLayout>
@@ -340,7 +278,7 @@
             android:background="#ccc" />
         <GridLayout
             app:columnCount="3"
-            android:paddingBottom="10dp"
+            android:paddingBottom="20dp"
             android:paddingTop="6dp"
 
             android:layout_width="match_parent"
@@ -353,7 +291,7 @@
                 android:layout_columnWeight="1"
                 >
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/imageView11"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
@@ -368,6 +306,7 @@
                     android:gravity="center"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/chapterBtn"
                 android:orientation="vertical"
                 android:layout_width="10dp"
                 android:layout_height="wrap_content"
@@ -375,7 +314,7 @@
                 >
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/imageView22"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
@@ -395,7 +334,7 @@
                 android:layout_columnWeight="1"
                 >
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/imageView33"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
@@ -418,7 +357,7 @@
 
     </LinearLayout>
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/backbtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="25dp"
