@@ -38,6 +38,7 @@ public class DescriptionPage extends AppCompatActivity {
     FlowLayout flowChude;
     LinearLayout chapterBtn;
     JSONArray chapterData;
+    String mangaName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +95,7 @@ public class DescriptionPage extends AppCompatActivity {
                 Intent i = new Intent(DescriptionPage.this, ChapterPage.class);
                 if(chapterData !=null) i.putExtra("data",chapterData.toString());
                 i.putExtra("mangaId", finalMangaId);
+                i.putExtra("mangaName",mangaName);
                 startActivity(i);
             }
         });
@@ -126,21 +128,21 @@ public class DescriptionPage extends AppCompatActivity {
         JSONObject titles = data.getJSONObject("attributes").getJSONObject("title");
         for (final Iterator<String> iter = titles.keys(); iter.hasNext();) {
             String key = iter.next();
-            name= titles.getString(key);
+            mangaName= titles.getString(key);
         }
 
-        textNameDes.setText(name);
+        textNameDes.setText(mangaName);
         JSONArray alt_titles = data.getJSONObject("attributes").getJSONArray("altTitles");
 
         for(int j =0;j<alt_titles.length();j++){
             JSONObject objTT = alt_titles.getJSONObject(j);
             for (final Iterator<String> iter = objTT.keys(); iter.hasNext();) {
                 String key = iter.next();
-                name= objTT.getString(key);
+                String name_alt= objTT.getString(key);
                 TextView alt_title_tv = new TextView(context);
                 alt_title_tv.setTextColor(Color.WHITE);
                 alt_title_tv.setTextSize(13);
-                alt_title_tv.setText(name);
+                alt_title_tv.setText(name_alt);
                 altTitles.addView(alt_title_tv);
             }
         }

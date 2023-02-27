@@ -1,10 +1,12 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,16 +25,51 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ReadManga extends AppCompatActivity {
+public class ReadManga extends AppCompatActivity implements ActionBottomDialogFragment.ItemClickListener {
     LinearLayout pagesLayout;
+    LinearLayout topMenu;
+    CardView backBtn;
+    TextView read_manga_name;
+    TextView read_chapter_name;
+    CardView menuRead;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_manga);
+        backBtn= findViewById(R.id.back_to_chapter);
         pagesLayout=findViewById(R.id.pagesLayout);
+        read_manga_name = findViewById(R.id.read_manga_name);
+        read_chapter_name = findViewById(R.id.read_chapter_name);
+        menuRead = findViewById(R.id.menuRead);
+        topMenu=findViewById(R.id.topMenu);
+        topMenu.setVisibility(View.GONE);
         Bundle extras = getIntent().getExtras();
         String chapterId= extras.getString("chapterId");
+        String chapterName =  extras.getString("chapterName");
+        String mangaName = extras.getString("mangaName");
+        read_manga_name.setText(mangaName);
+        read_chapter_name.setText(chapterName);
         loadPages(chapterId);
+        pagesLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(topMenu.isShown()){
+                    topMenu.setVisibility(View.GONE);
+                }else topMenu.setVisibility(View.VISIBLE);
+            }
+        });
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        menuRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBottomSheet();
+            }
+        });
     }
 
     private void loadPages(String chapterId) {
@@ -60,7 +97,7 @@ public class ReadManga extends AppCompatActivity {
 //                                   ZoomageView zoomView = new ZoomageView(context);
 //                                   zoomView.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //                                   zoomView.
-//                                   pagesLayout.addView(imgView);
+                                   pagesLayout.addView(imgView);
                                }
                            } catch (JSONException e) {
                                throw new RuntimeException(e);
@@ -78,5 +115,16 @@ public class ReadManga extends AppCompatActivity {
                     }
                 });
         queue.add(jsonObjectRequest);
+    }
+
+    public void showBottomSheet() {
+        ActionBottomDialogFragment addPhotoBottomDialogFragment =
+                ActionBottomDialogFragment.newInstance();
+        addPhotoBottomDialogFragment.show(getSupportFragmentManager(),
+                ActionBottomDialogFragment.TAG);
+    }
+    @Override
+    public void onItemClick(String item) {
+
     }
 }

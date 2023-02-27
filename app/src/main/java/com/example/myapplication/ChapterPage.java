@@ -52,6 +52,7 @@ public class ChapterPage extends AppCompatActivity {
     LinearLayout showRs;
     JSONArray data;
     String mangaId;
+    String mangaName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +61,7 @@ public class ChapterPage extends AppCompatActivity {
         mainLayout = findViewById(R.id.main);
         String dataStr = extras.getString("data");
         mangaId = extras.getString("mangaId");
+        mangaName = extras.getString("mangaName");
         Log.v("mângId::",mangaId);
         try {
             if(dataStr !=null) data = new JSONArray(dataStr);
@@ -222,8 +224,11 @@ public class ChapterPage extends AppCompatActivity {
                     one_chap_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            String name= chapterName.getText().toString().trim();
                             Intent i = new Intent(ChapterPage.this, ReadManga.class);
                             i.putExtra("chapterId",chapterId);
+                            i.putExtra("chapterName",name);
+                            i.putExtra("mangaName",mangaName);
                             startActivity(i);
                         }
                     });
