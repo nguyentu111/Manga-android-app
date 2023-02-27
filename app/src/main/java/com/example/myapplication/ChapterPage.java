@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -53,6 +54,7 @@ public class ChapterPage extends AppCompatActivity {
     JSONArray data;
     String mangaId;
     String mangaName;
+    String coverUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,7 @@ public class ChapterPage extends AppCompatActivity {
         String dataStr = extras.getString("data");
         mangaId = extras.getString("mangaId");
         mangaName = extras.getString("mangaName");
-        Log.v("mângId::",mangaId);
+        coverUrl = extras.getString("imgUrl");
         try {
             if(dataStr !=null) data = new JSONArray(dataStr);
             loadChapters();
@@ -197,14 +199,10 @@ public class ChapterPage extends AppCompatActivity {
                     TextView chapterName = new TextView(this);
                     String chapStr = chapter.getJSONObject("attributes").getString("chapter");
                     if(title.equals("null") || title.toString().trim().equals("") ){
-                        if(chapters.size()==1){
-                            if(chapStr.equals("null")){
-                                chapterName.setText("One shot");
-                            }else{
-                                chapterName.setText("Ch."+chapStr);
-                            }
+                        if(chapStr.equals("null")){
+                            chapterName.setText("One shot");
                         }else{
-                            chapterName.setText("Ch. "+chapStr);
+                            chapterName.setText("Ch."+chapStr);
                         }
                     }else{
                         if(chapters.size()==1){
@@ -221,6 +219,7 @@ public class ChapterPage extends AppCompatActivity {
                     chapterName.setLayoutParams(paramsText3);
                     one_chap_layout.addView(chapterName);
                     String chapterId = chapter.getString("id");
+                    String currentLanguage =  chapter.getJSONObject("attributes").getString("translatedLanguage");
                     one_chap_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -229,6 +228,10 @@ public class ChapterPage extends AppCompatActivity {
                             i.putExtra("chapterId",chapterId);
                             i.putExtra("chapterName",name);
                             i.putExtra("mangaName",mangaName);
+                            i.putExtra("chaptersData",data.toString());
+                            i.putExtra("currentLanguage",currentLanguage);
+                            i.putExtra("mangaId",mangaId);
+                            i.putExtra("coverUrl",coverUrl);
                             startActivity(i);
                         }
                     });
@@ -273,7 +276,7 @@ public class ChapterPage extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error
-
+                        Toast.makeText(ChapterPage.this, error.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
         queue.add(jsonObjectRequest);

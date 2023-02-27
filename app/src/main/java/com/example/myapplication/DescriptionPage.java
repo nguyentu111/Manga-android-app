@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -96,6 +97,7 @@ public class DescriptionPage extends AppCompatActivity {
                 if(chapterData !=null) i.putExtra("data",chapterData.toString());
                 i.putExtra("mangaId", finalMangaId);
                 i.putExtra("mangaName",mangaName);
+                i.putExtra("imgUrl",imgUrl);
                 startActivity(i);
             }
         });
@@ -120,8 +122,8 @@ public class DescriptionPage extends AppCompatActivity {
         if(imgUrl!=null){
             Picasso.get()
                     .load(imgUrl)
-                    .resize(imgWidth, imgHeight)
-                    .centerCrop()
+//                    .resize(imgWidth, imgHeight)
+                    //.centerCrop()
                     .into(imgCoverDes);
         }
         String name="" ;
@@ -130,7 +132,6 @@ public class DescriptionPage extends AppCompatActivity {
             String key = iter.next();
             mangaName= titles.getString(key);
         }
-
         textNameDes.setText(mangaName);
         JSONArray alt_titles = data.getJSONObject("attributes").getJSONArray("altTitles");
 
@@ -209,7 +210,7 @@ public class DescriptionPage extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error
-
+                        Toast.makeText(DescriptionPage.this, error.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
         queue.add(jsonObjectRequest);

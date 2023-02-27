@@ -1,15 +1,22 @@
 package com.example.myapplication;
 
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class ActionBottomDialogFragment extends BottomSheetDialogFragment
         implements View.OnClickListener {
@@ -17,6 +24,31 @@ public class ActionBottomDialogFragment extends BottomSheetDialogFragment
     private ItemClickListener mListener;
     public static ActionBottomDialogFragment newInstance() {
         return new ActionBottomDialogFragment();
+    }
+    @NonNull @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                BottomSheetDialog d = (BottomSheetDialog) dialog;
+
+                FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                int orientation = getResources().getConfiguration().orientation;
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    // In landscape
+                    BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    // In portrait
+                }
+
+            }
+        });
+
+        // Do something with your dialog like setContentView() or whatever
+        return dialog;
     }
     @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

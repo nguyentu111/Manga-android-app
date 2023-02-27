@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     app:cardBackgroundColor="#373737"
-    app:cardCornerRadius="20dp"
-    android:padding="30dp"
+    app:cardCornerRadius="14dp"
+    android:padding="15dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -13,16 +13,16 @@
       android:layout_height="wrap_content">
 
       <TextView
-          android:textSize="25dp"
+          android:textSize="20dp"
           android:textColor="#fff"
-          android:layout_marginLeft="30dp"
-          android:layout_marginTop="30dp"
+          android:layout_marginLeft="20dp"
+          android:layout_marginTop="20dp"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:text="Cài đặt"
           />
       <LinearLayout
-          android:padding="20dp"
+          android:padding="13dp"
           android:orientation="vertical"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -30,70 +30,78 @@
           android:layout_height="wrap_content"
           android:paddingBottom="8dp"
           >
-            <androidx.cardview.widget.CardView
-                app:cardCornerRadius="20dp"
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewFilledStyle"
+                app:cardCornerRadius="10dp"
+                android:layout_marginBottom="15dp"
                 app:cardBackgroundColor="#525252"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
                     android:orientation="vertical"
-                    android:padding="30dp"
+                    android:padding="13dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
-                        android:textSize="25dp"
+                        android:textSize="15dp"
+                        android:layout_marginBottom="13dp"
                         android:textColor="#fff"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Nền"
                         />
-                   <androidx.cardview.widget.CardView
-                       app:cardBackgroundColor="#525252"
-                       app:cardCornerRadius="20dp"
+                   <com.google.android.material.card.MaterialCardView
+                       style="?attr/materialCardViewFilledStyle"
+
+                       app:cardBackgroundColor="#646464"
+                       app:cardCornerRadius="10dp"
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content">
                        <LinearLayout
 
                            android:layout_width="match_parent"
                            android:layout_height="wrap_content">
-                           <androidx.cardview.widget.CardView
+                           <com.google.android.material.card.MaterialCardView
+                             app:strokeColor="#E0A816"
+                               app:strokeWidth="2dp"
+                               app:cardElevation="0dp"
                                app:cardBackgroundColor="#646464"
-                               android:padding="30dp"
-                               app:cardCornerRadius="20dp"
+                               android:padding="15dp"
+                               app:cardCornerRadius="10dp"
                                android:layout_weight="1"
                                android:layout_width="wrap_content"
                                android:layout_height="wrap_content">
                                <LinearLayout
-                                   android:padding="30dp"
+                                   android:padding="15dp"
                                    android:layout_width="match_parent"
                                    android:layout_height="wrap_content"
                                    >
                                    <TextView
                                        android:gravity="center"
-                                       android:textSize="25dp"
+                                       android:textSize="15dp"
                                        android:textColor="#fff"
                                        android:layout_width="match_parent"
                                        android:layout_height="wrap_content"
                                        android:text="Sáng"
                                        />
                                </LinearLayout>
-                           </androidx.cardview.widget.CardView>
+                           </com.google.android.material.card.MaterialCardView>
                            <com.google.android.material.card.MaterialCardView
                                app:cardBackgroundColor="#646464"
-                               android:padding="30dp"
-
-                               app:cardCornerRadius="20dp"
+                               android:padding="15dp"
+                               app:cardElevation="0dp"
+                               app:cardCornerRadius="10dp"
                                android:layout_weight="1"
                                android:layout_width="wrap_content"
                                android:layout_height="wrap_content">
                                <LinearLayout
-                                   android:padding="30dp"
+                                   android:padding="15dp"
                                    android:layout_width="match_parent"
                                    android:layout_height="wrap_content"
                                    >
                                    <TextView
                                        android:gravity="center"
-                                       android:textSize="25dp"
+                                       android:textSize="15dp"
                                        android:textColor="#fff"
                                        android:layout_width="match_parent"
                                        android:layout_height="wrap_content"
@@ -102,9 +110,194 @@
                                </LinearLayout>
                            </com.google.android.material.card.MaterialCardView>
                        </LinearLayout>
-                   </androidx.cardview.widget.CardView>
+                   </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
+          <com.google.android.material.card.MaterialCardView
+              style="?attr/materialCardViewFilledStyle"
+              app:cardCornerRadius="10dp"
+              android:layout_marginBottom="15dp"
+              app:cardBackgroundColor="#525252"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+              <LinearLayout
+                  android:orientation="vertical"
+                  android:padding="13dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+                  <TextView
+                      android:textSize="15dp"
+                      android:layout_marginBottom="13dp"
+                      android:textColor="#fff"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Chế độ đọc"
+                      />
+                  <com.google.android.material.card.MaterialCardView
+                      style="?attr/materialCardViewFilledStyle"
+
+                      app:cardBackgroundColor="#646464"
+                      app:cardCornerRadius="10dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                      <LinearLayout
+
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content">
+                          <com.google.android.material.card.MaterialCardView
+                              app:cardElevation="0dp"                              app:cardBackgroundColor="#646464"
+                              android:padding="15dp"
+                              app:cardCornerRadius="20dp"
+                              android:layout_weight="1"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content">
+                              <LinearLayout
+                                  android:padding="15dp"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  >
+                                  <TextView
+                                      android:gravity="center"
+                                      android:textSize="15dp"
+                                      android:textColor="#fff"
+                                      android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      android:text="Ngang"
+                                      />
+                              </LinearLayout>
+                          </com.google.android.material.card.MaterialCardView>
+                          <com.google.android.material.card.MaterialCardView
+                              app:cardBackgroundColor="#646464"
+                              android:padding="15dp"
+                              app:cardElevation="0dp"
+                              app:cardCornerRadius="20dp"
+                              android:layout_weight="1"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content">
+                              <LinearLayout
+                                  android:padding="15dp"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  >
+                                  <TextView
+                                      android:gravity="center"
+                                      android:textSize="15dp"
+                                      android:textColor="#fff"
+                                      android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      android:text="Dọc"
+                                      />
+                              </LinearLayout>
+                          </com.google.android.material.card.MaterialCardView>
+                          <com.google.android.material.card.MaterialCardView
+                              app:cardBackgroundColor="#646464"
+                              android:padding="15dp"
+                              app:cardElevation="0dp"
+                              app:cardCornerRadius="20dp"
+                              android:layout_weight="1"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content">
+                              <LinearLayout
+                                  android:padding="15dp"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  >
+
+                                  <TextView
+                                      android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      android:gravity="center"
+                                      android:text="Webtoon"
+                                      android:textColor="#fff"
+                                      android:textSize="15dp" />
+                              </LinearLayout>
+                          </com.google.android.material.card.MaterialCardView>
+                      </LinearLayout>
+                  </com.google.android.material.card.MaterialCardView>
+              </LinearLayout>
+          </com.google.android.material.card.MaterialCardView>
+          <com.google.android.material.card.MaterialCardView
+              style="?attr/materialCardViewFilledStyle"
+              app:cardCornerRadius="10dp"
+              android:layout_marginBottom="10dp"
+              app:cardBackgroundColor="#525252"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+              <LinearLayout
+                  android:orientation="vertical"
+                  android:padding="13dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+                  <TextView
+                      android:textSize="15dp"
+                      android:layout_marginBottom="13dp"
+                      android:textColor="#fff"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Định hướng đọc"
+                      />
+                  <com.google.android.material.card.MaterialCardView
+                      style="?attr/materialCardViewFilledStyle"
+
+                      app:cardBackgroundColor="#646464"
+                      app:cardCornerRadius="10dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                      <LinearLayout
+
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content">
+                          <com.google.android.material.card.MaterialCardView
+                              app:cardElevation="0dp"
+                              app:cardBackgroundColor="#646464"
+                              android:padding="15dp"
+                              app:cardCornerRadius="20dp"
+                              android:layout_weight="1"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content">
+                              <LinearLayout
+                                  android:padding="15dp"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  >
+                                  <TextView
+                                      android:gravity="center"
+                                      android:textSize="15dp"
+                                      android:textColor="#fff"
+                                      android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      android:text="Trái sang phải"
+                                      />
+                              </LinearLayout>
+                          </com.google.android.material.card.MaterialCardView>
+                          <com.google.android.material.card.MaterialCardView
+                              app:cardBackgroundColor="#646464"
+                              android:padding="15dp"
+                              app:cardElevation="0dp"
+                              app:cardCornerRadius="20dp"
+                              android:layout_weight="1"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content">
+                              <LinearLayout
+                                  android:padding="15dp"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  >
+                                  <TextView
+                                      android:gravity="center"
+                                      android:textSize="15dp"
+                                      android:textColor="#fff"
+                                      android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      android:text="Phải sang trái"
+                                      />
+                              </LinearLayout>
+                          </com.google.android.material.card.MaterialCardView>
+                      </LinearLayout>
+                  </com.google.android.material.card.MaterialCardView>
+              </LinearLayout>
+          </com.google.android.material.card.MaterialCardView>
+
       </LinearLayout>
   </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
