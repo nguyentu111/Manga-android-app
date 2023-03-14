@@ -31,7 +31,7 @@ public class DescriptionPage extends AppCompatActivity {
     TextView textNameDes;
     LinearLayout altTitles;
     Context context;
-    ImageView backbtn;
+    ImageView back_to_discover;
     FlowLayout flowTheLoai;
     FlowLayout flowTrangthai;
     FlowLayout flowDinhdang;
@@ -53,7 +53,7 @@ public class DescriptionPage extends AppCompatActivity {
         flowTrangthai=findViewById(R.id.flowTrangthai);
         flowDinhdang=findViewById(R.id.flowDinhdang);
         flowTacgia=findViewById(R.id.flowTacgia);
-
+        back_to_discover =findViewById(R.id.back_to_discover);
         flowChude=findViewById(R.id.flowChude);
         chapterBtn= findViewById(R.id.chapterBtn);
 //        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_LA);
@@ -101,6 +101,12 @@ public class DescriptionPage extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        back_to_discover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
     private void loadInfo(JSONObject data, String imgUrl) throws JSONException {
         JSONArray relationships = data.getJSONArray("relationships");
@@ -122,7 +128,7 @@ public class DescriptionPage extends AppCompatActivity {
         if(imgUrl!=null){
             Picasso.get()
                     .load(imgUrl)
-//                    .resize(imgWidth, imgHeight)
+                    .resize(328, 492)
                     //.centerCrop()
                     .into(imgCoverDes);
         }

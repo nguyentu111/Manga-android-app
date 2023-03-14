@@ -55,12 +55,14 @@ public class ChapterPage extends AppCompatActivity {
     String mangaId;
     String mangaName;
     String coverUrl;
+    ImageView back_to_des ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapter_page);
         Bundle extras = getIntent().getExtras();
         mainLayout = findViewById(R.id.main);
+        back_to_des = findViewById(R.id.back_to_des);
         String dataStr = extras.getString("data");
         mangaId = extras.getString("mangaId");
         mangaName = extras.getString("mangaName");
@@ -71,6 +73,12 @@ public class ChapterPage extends AppCompatActivity {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+        back_to_des.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
     private void setShowRs(){
         int mesuredHeight = showRs.getMeasuredHeight();

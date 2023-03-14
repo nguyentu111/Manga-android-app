@@ -13,13 +13,12 @@
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp">
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/back_to_des"
             android:layout_width="45dp"
             android:layout_marginTop="25dp"
             android:layout_marginLeft="15dp"
             android:layout_marginBottom="50dp"
             android:layout_height="40dp"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/baseline_chevron_left_24" />

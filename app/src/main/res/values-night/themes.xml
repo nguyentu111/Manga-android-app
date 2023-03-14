@@ -20,6 +20,7 @@
     <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
     </style>
-
-
+    <style name="TabLayout_Theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:singleLine">true</item>
+    </style>
 </resources>
