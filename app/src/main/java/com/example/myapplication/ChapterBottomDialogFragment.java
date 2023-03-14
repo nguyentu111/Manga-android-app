@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,7 +38,6 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
         implements View.OnClickListener {
@@ -51,13 +51,14 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
     TextView read_chapter_name;
     private ItemClickListener mListener;
     TextView current_reading_chapter_textview;
-    ScrollView scrollView;
+    NestedScrollView scrollView;
+    LinearLayout bottom_sheet_chapters;
 //    public static ChapterBottomDialogFragment newInstance(JSONArray chapters) {
 //        return new ChapterBottomDialogFragment(chapters);
 //    }
 
     public ChapterBottomDialogFragment(String currentLanguage , String mangaId, String coverUrl, String mangaName
-            , String currentChapterId, LinearLayout pagesLayout, TextView read_chapter_name, ScrollView scrollView){
+            , String currentChapterId, LinearLayout pagesLayout, TextView read_chapter_name){
         super();
         this.currentLanguage = currentLanguage;
         this.mangaId = mangaId;
@@ -66,12 +67,15 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
         this.currentChapterId = currentChapterId;
         this.pagesLayout =  pagesLayout;
         this.read_chapter_name =read_chapter_name;
-        this.scrollView = scrollView;
     }
     private int getScreenHeight(){
         return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
-
+    public void scrollToCurrentChapter(){
+        if(bottom_sheet_chapters !=null){
+            scrollView.scrollTo(0, ((int) (current_reading_chapter_textview.getTop() )));
+        }
+    }
     @NonNull @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -84,10 +88,10 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
 
                 FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
                 BottomSheetBehavior.from(bottomSheet).setMaxHeight((int) (getScreenHeight()/1.5));
-                if(  current_reading_chapter_textview !=null){
-                    Log.v("asdads","scrolling");
-                    scrollView.smoothScrollTo(0, current_reading_chapter_textview.getBottom());
-                }
+
+//                if(  current_reading_chapter_textview !=null){
+//
+//                }
 //                Point childOffset = new Point();
 //                getDeepChildOffset(scrollViewParent, view.getParent(), view, childOffset);
                 // Scroll to child.
@@ -111,10 +115,12 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
     }
     @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LinearLayout layout = view.findViewById(R.id.bottom_sheet_chapters);
+        scrollView = view.findViewById(R.id.bottom_sheet_chapters_scroolview);
+        bottom_sheet_chapters = view.findViewById(R.id.bottom_sheet_chapters);
         TextView bottom_sheet_manga_name = view.findViewById(R.id.bottom_sheet_manga_name);
         bottom_sheet_manga_name.setText(mangaName);
         ImageView bottom_sheet_img_cover = view.findViewById(R.id.bottom_sheet_img_cover);
+
         Picasso.get()
                 .load(coverUrl)
 //                .resize(30 ,45)
@@ -178,6 +184,7 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
                                         current_reading_chapter_textview = textView;
                                         textView.setBackgroundColor(Color.GRAY);
                                         dismiss();
+
                                         loadPages(pagesLayout,chapterId,view.getContext());
                                     }
                                 });
@@ -188,7 +195,6 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
                         }
                     }
                 }, new Response.ErrorListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error

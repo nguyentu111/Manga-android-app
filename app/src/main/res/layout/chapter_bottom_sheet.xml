@@ -57,6 +57,7 @@
           android:layout_height="1dp"
           android:background="#ccc" />
       <androidx.core.widget.NestedScrollView
+          android:id="@+id/bottom_sheet_chapters_scroolview"
           android:paddingBottom="20dp"
           android:layout_width="match_parent"
           android:layout_height="wrap_content">

@@ -5,10 +5,20 @@ import static com.example.myapplication.Utils.loadPages;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.example.myapplication.components.ZoomLinearLayout;
+import com.otaliastudios.zoom.ZoomLayout;
+
 public class ReadManga extends AppCompatActivity implements ActionBottomDialogFragment.ItemClickListener,ChapterBottomDialogFragment.ItemClickListener {
     LinearLayout pagesLayout;
     LinearLayout topMenu;
@@ -20,6 +30,9 @@ public class ReadManga extends AppCompatActivity implements ActionBottomDialogFr
     ChapterBottomDialogFragment chapterBottomDialogFragment;
     LinearLayout show_chapter_bottom_btn;
     ScrollView read_scroll_view;
+    private float mScale = 1f;
+    private ScaleGestureDetector mScaleGestureDetector;
+    GestureDetector gestureDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,16 +49,16 @@ public class ReadManga extends AppCompatActivity implements ActionBottomDialogFr
         Bundle extras = getIntent().getExtras();
         String chapterId= extras.getString("chapterId");
         loadPages(pagesLayout,chapterId,this);
+        ////////
         String chapterName =  extras.getString("chapterName");
         String mangaName = extras.getString("mangaName");
         String mangaId = extras.getString("mangaId");
         String currentLanguage = extras.getString("currentLanguage");
         String coverUrl = extras.getString("coverUrl");
         bottomDialogFragment = ActionBottomDialogFragment.newInstance();
-        chapterBottomDialogFragment = new ChapterBottomDialogFragment(currentLanguage,mangaId,coverUrl,mangaName,chapterId,pagesLayout,read_chapter_name,read_scroll_view);
+        chapterBottomDialogFragment = new ChapterBottomDialogFragment(currentLanguage,mangaId,coverUrl,mangaName,chapterId,pagesLayout,read_chapter_name);
         read_manga_name.setText(mangaName);
         read_chapter_name.setText(chapterName);
-
         pagesLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,6 +86,7 @@ public class ReadManga extends AppCompatActivity implements ActionBottomDialogFr
                 showChapterBottomSheet();
             }
         });
+
     }
 
 
@@ -90,6 +104,7 @@ public class ReadManga extends AppCompatActivity implements ActionBottomDialogFr
         }
         chapterBottomDialogFragment.show(getSupportFragmentManager(),
                 ChapterBottomDialogFragment.TAG);
+        chapterBottomDialogFragment.scrollToCurrentChapter();
     }
     @Override
     public void onItemClick(String item) {

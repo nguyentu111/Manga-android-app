@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.otaliastudios.zoom.ZoomLayout;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -42,8 +45,10 @@ public class Utils {
 //                                        .centerCrop()
                                             .into(imgView);
 //                                   ZoomageView zoomView = new ZoomageView(context);
-//                                   zoomView.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    //
 //                                   zoomView.
+                                   // Log.v(String.valueOf(pagesLayout.getWidth()),String.valueOf(imgView.getHeight()));
+//                                    zoomLayout.measure(pagesLayout.getWidth(), imgView.getHeight());
                                     pagesLayout.addView(imgView);
                                 }
                             } catch (JSONException e) {

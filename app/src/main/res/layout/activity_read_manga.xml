@@ -7,18 +7,20 @@
     tools:context=".ReadManga"
     android:orientation="vertical"
     android:id="@+id/mainlayout">
-
-    <ScrollView
-        android:id="@+id/read_scroll_view"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/read_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/pagesLayout">
-        </LinearLayout>
-    </ScrollView>
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/pagesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
     <LinearLayout
         android:id="@+id/topMenu"
         android:orientation="vertical"

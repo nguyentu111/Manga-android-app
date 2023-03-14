@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                                 cardView.addView(imgView);
-
                                 manga.addView(cardView);
                                 ////////// name and chap
                                 LinearLayout info = new LinearLayout(context);
