@@ -278,7 +278,7 @@
             android:background="#ccc" />
         <GridLayout
             app:columnCount="3"
-            android:paddingBottom="20dp"
+            android:paddingBottom="5dp"
             android:paddingTop="6dp"
 
             android:layout_width="match_parent"
@@ -327,7 +327,9 @@
                     android:textSize="13dp"
                     android:gravity="center"/>
             </LinearLayout>
+
             <LinearLayout
+                android:id="@+id/lnThemVaoKe"
                 android:orientation="vertical"
                 android:layout_width="10dp"
                 android:layout_height="wrap_content"

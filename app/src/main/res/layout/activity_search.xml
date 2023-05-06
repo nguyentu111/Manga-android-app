@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Search"
+    android:background="@color/black">
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_chevron_left_24" />
+    <TextView
+        android:id="@+id/tvTimTruyen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tìm truyện"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:layout_marginLeft="15dp"/>
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Tìm truyện"
+        android:layout_marginBottom="5dp"/>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tvSearchNotFound"
+        android:layout_marginTop="23dp"
+        android:gravity="center"
+        android:textColor="#fff"
+        android:textSize="17dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Không tìm thấy truyện"/>
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="3"/>
+</LinearLayout>

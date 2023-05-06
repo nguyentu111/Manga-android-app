@@ -10,17 +10,24 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-<!--        <item name="android:statusBarColor">?attr/colorOnPrimary</item>-->
+        <!--        <item name="android:statusBarColor">?attr/colorOnPrimary</item>-->
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
     </style>
+
     <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
     </style>
+
     <style name="TabLayout_Theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="ThemeOverlay.MyApplication.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_900</item>
+        <item name="fullscreenTextColor">@color/light_blue_A400</item>
     </style>
 </resources>

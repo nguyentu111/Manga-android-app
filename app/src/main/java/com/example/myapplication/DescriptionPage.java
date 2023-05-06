@@ -1,5 +1,7 @@
 package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,6 +25,9 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class DescriptionPage extends AppCompatActivity {
@@ -37,9 +42,11 @@ public class DescriptionPage extends AppCompatActivity {
     FlowLayout flowDinhdang;
     FlowLayout flowTacgia;
     FlowLayout flowChude;
-    LinearLayout chapterBtn;
+    LinearLayout chapterBtn, lnThemVaoKe;
     JSONArray chapterData;
-    String mangaName;
+    String finalMangaId, mangaName, imgUrl;
+    static Truyen mTruyen = new Truyen();
+    public static ArrayList<Truyen> data_Truyen = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,22 +63,24 @@ public class DescriptionPage extends AppCompatActivity {
         back_to_discover =findViewById(R.id.back_to_discover);
         flowChude=findViewById(R.id.flowChude);
         chapterBtn= findViewById(R.id.chapterBtn);
+        lnThemVaoKe= findViewById(R.id.lnThemVaoKe);
 //        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_LA);
 //        getWindow().setStatusBarColor(Color.TRANSPARENT);
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        );
+//        getWindow().getDecorView().setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+//                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//        );
         Bundle extras = getIntent().getExtras();
         if (extras == null) return ;
         String dataStr = extras.getString("data");
         JSONObject data = null;
         try {
             data = new JSONObject(dataStr);
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        String imgUrl =  extras.getString("imgUrl");
+        imgUrl =  extras.getString("imgUrl");
         try {
             loadInfo(data,imgUrl);
         } catch (JSONException e) {
@@ -88,19 +97,59 @@ public class DescriptionPage extends AppCompatActivity {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        String finalMangaId = mangaId;
+        finalMangaId = mangaId;
         chapterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Truyen truyen = new Truyen();
+                truyen.setMangaId(finalMangaId);
+                truyen.setMangaName(mangaName);
+                truyen.setImgUrl(imgUrl);
+                truyen.setDataStr(dataStr);
+                for (Truyen truyen1 : LichSuFragment.data_Truyen){
+                    if (truyen1.getMangaId().equals(finalMangaId)){
+                        truyen.setLastChapter(truyen1.getLastChapter());
+                    }
+                }
+                mTruyen = truyen;
+//                mTruyen.convertTruyen(truyen);
 
                 Intent i = new Intent(DescriptionPage.this, ChapterPage.class);
                 if(chapterData !=null) i.putExtra("data",chapterData.toString());
                 i.putExtra("mangaId", finalMangaId);
                 i.putExtra("mangaName",mangaName);
                 i.putExtra("imgUrl",imgUrl);
+                i.putExtra("truyen",truyen);
                 startActivity(i);
             }
         });
+        lnThemVaoKe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Truyen truyen = new Truyen();
+                truyen.setMangaId(finalMangaId);
+                truyen.setMangaName(mangaName);
+                truyen.setImgUrl(imgUrl);
+                truyen.setDataStr(dataStr);
+                truyen.setCheck(0);
+                mTruyen = truyen;
+
+                int a = 0;
+                for (Truyen truyen1 : data_Truyen) {
+                    if (truyen1.getMangaId().equals(finalMangaId)) {
+                        Toast.makeText(context, "Truyện đã được lưu", Toast.LENGTH_SHORT).show();
+                        a = 1;
+                        break;
+                    }
+                }
+                if (a == 0){
+                    data_Truyen.add(0,truyen);
+                    KeSachFragment.loadTruyen();
+                    Toast.makeText(context, "Đã lưu vào kệ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         back_to_discover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

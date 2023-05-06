@@ -1,4 +1,9 @@
-package com.example.myapplication.tabs;
+package com.example.myapplication;
+
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.gridlayout.widget.GridLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,19 +11,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.gridlayout.widget.GridLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -26,8 +23,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.myapplication.DescriptionPage;
-import com.example.myapplication.R;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -36,44 +31,36 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-public class tab2 extends Fragment {
+/**
+ * An example full-screen activity that shows and hides the system UI (i.e.
+ * status bar and navigation/system bar) with user interaction.
+ */
+public class FilterManga extends AppCompatActivity {
     GridLayout gridView;
-    Context context;
     int gridLayoutGap = 16;
-    ScrollView scrollView;
-    public tab2() {
-        // Required empty public constructor
+    ImageView back;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_filter_manga);
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) return ;
+        String url = extras.getString("url");
+        gridView= findViewById(R.id.gridview);
+        back = findViewById(R.id.back);
+        loadMangas(url);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
-
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tab2, container, false);
-    }
-    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        gridView= view.findViewById(R.id.gridview);
-        scrollView = view.findViewById(R.id.tab1ScrollView);
-        context = view.getContext();
-        loadMangas(0);
-//        scrollView.getViewTreeObserver()
-//                .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-//                    @Override
-//                    public void onScrollChanged() {
-//                        if (scrollView.getChildAt(0).getBottom()
-//                                <= (scrollView.getHeight() + scrollView.getScrollY())) {
-//                            loadMangas(1);//
-//                        } else {
-//                            //scroll view is not at bottom
-//                        }
-//                    }
-//                });
-    }
-    private void loadMangas(int page){
-        Log.v("load","load mange");
-        String offset = String.valueOf(page*51);
-        String url="https://api.mangadex.org/manga?limit=51&offset="+offset+"&includes[]=author&includes[]=artist&includes[]=cover_art&excludedTags[]=5920b825-4181-4a17-beeb-9918b0ff7a30&excludedTagsMode=AND";
-        RequestQueue queue = Volley.newRequestQueue(context);
+    public void loadMangas(String url){
+        Context context = getBaseContext();
+        String offset = String.valueOf(0*51);
+       // String url="https://api.mangadex.org/manga?limit=51&offset="+offset+"&includes[]=author&includes[]=artist&includes[]=cover_art&order%5BcreatedAt%5D=desc&hasAvailableChapters=true";
+        RequestQueue queue = Volley.newRequestQueue(getBaseContext());
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -137,7 +124,7 @@ public class tab2 extends Fragment {
                                 mangaName.setWidth((gridView.getMeasuredWidth()-(gridLayoutGap*6))/3);
                                 mangaName.setHeight(110);
                                 mangaName.setMaxLines(2);
-                                TextView mangaLastChap = new TextView(getContext());
+                                TextView mangaLastChap = new TextView(context);
                                 mangaLastChap.setTextSize(15);
                                 mangaLastChap.setGravity(Gravity.CENTER);
                                 mangaLastChap.setTextColor(Color.WHITE);
@@ -150,7 +137,7 @@ public class tab2 extends Fragment {
                                 manga.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        Intent i = new Intent(getContext(), DescriptionPage.class);
+                                        Intent i = new Intent(context, DescriptionPage.class);
                                         i.putExtra("data",data.toString());
                                         i.putExtra("imgUrl", finalImgUrl);
                                         startActivity(i);
@@ -189,9 +176,8 @@ public class tab2 extends Fragment {
         queue.add(jsonObjectRequest);
     }
     private void loadLastChapter(String mangaId,TextView textView){
-
         String url = "https://api.mangadex.org/manga/"+mangaId+"/feed";
-        RequestQueue queue = Volley.newRequestQueue(getContext());
+        RequestQueue queue = Volley.newRequestQueue(getBaseContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override

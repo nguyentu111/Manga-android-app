@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,12 +13,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,26 +24,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChapterPage extends AppCompatActivity {
     Button showbtn;
@@ -56,17 +45,26 @@ public class ChapterPage extends AppCompatActivity {
     String mangaName;
     String coverUrl;
     ImageView back_to_des ;
+    String dataStr;
+    static String lastChap;
+    public static ArrayList<Truyen> data_Truyen = new ArrayList<>();
+    Truyen mTruyen;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapter_page);
+        context = this;
         Bundle extras = getIntent().getExtras();
         mainLayout = findViewById(R.id.main);
         back_to_des = findViewById(R.id.back_to_des);
-        String dataStr = extras.getString("data");
+        dataStr = extras.getString("data");
         mangaId = extras.getString("mangaId");
         mangaName = extras.getString("mangaName");
         coverUrl = extras.getString("imgUrl");
+        DescriptionPage descriptionPage = new DescriptionPage();
+        mTruyen = (Truyen) extras.getSerializable("truyen");
+
         try {
             if(dataStr !=null) data = new JSONArray(dataStr);
             loadChapters();
@@ -231,6 +229,26 @@ public class ChapterPage extends AppCompatActivity {
                     one_chap_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            lastChap = chapStr;
+                            if (mTruyen.getLastChapter() == null || Float.parseFloat(mTruyen.getLastChapter()) < Float.parseFloat(chapStr)){
+                                Log.d("DEBUG_lastChap","-lastChap:"+chapStr+"-mtruyen:"+mTruyen.getLastChapter());
+                                mTruyen.setLastChapter(chapStr);
+                                mTruyen.setCheck(1);
+                            }
+                            else{
+                                Log.d("DEBUG_lastChap1","-lastChap:"+chapStr+"-mtruyen:"+mTruyen.getLastChapter());
+                                mTruyen.setCheck(1);
+                            }
+
+                            for (Truyen truyen1 : data_Truyen) {
+                                if (truyen1.getMangaId().equals(mangaId)) {
+                                    data_Truyen.remove(truyen1);
+                                    break;
+                                }
+                            }
+                            data_Truyen.add(0,mTruyen);
+                            LichSuFragment.loadTruyen(context);
+
                             String name= chapterName.getText().toString().trim();
                             Intent i = new Intent(ChapterPage.this, ReadManga.class);
                             i.putExtra("chapterId",chapterId);
@@ -240,6 +258,7 @@ public class ChapterPage extends AppCompatActivity {
                             i.putExtra("currentLanguage",currentLanguage);
                             i.putExtra("mangaId",mangaId);
                             i.putExtra("coverUrl",coverUrl);
+                            i.putExtra("chapStr",chapStr);
                             startActivity(i);
                         }
                     });

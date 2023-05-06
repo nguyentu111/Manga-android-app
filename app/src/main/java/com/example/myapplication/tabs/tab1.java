@@ -34,19 +34,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.DescriptionPage;
-import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
-import com.example.myapplication.components.CustomScrollView;
 
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Iterator;
 public class tab1 extends Fragment   {
     GridLayout gridView;
@@ -87,8 +81,8 @@ public class tab1 extends Fragment   {
     }
     private void loadMangas(int page){
         Log.v("load","load mange");
-        String offset = String.valueOf(page*51);
-        String url="https://api.mangadex.org/manga?limit=51&offset="+offset+"&includes[]=author&includes[]=artist&includes[]=cover_art";
+        String offset = String.valueOf(page*30);
+        String url="https://api.mangadex.org/manga?limit=51&offset="+offset+"&includes[]=author&includes[]=artist&includes[]=cover_art&order%5BcreatedAt%5D=desc&hasAvailableChapters=true&excludedTags[]=5920b825-4181-4a17-beeb-9918b0ff7a30&excludedTagsMode=AND";
         RequestQueue queue = Volley.newRequestQueue(context);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_ke_sach"
+            android:title="@string/trang_chu"
+            android:icon="@drawable/baseline_home_24" />
+    <item android:id="@+id/action_kham_pha"
+            android:title="@string/kham_pha"
+            android:icon="@drawable/baseline_search_24"/>
+    <item android:id="@+id/action_cong_dong"
+            android:title="@string/cong_dong"
+            android:icon="@drawable/baseline_chat_24"/>
+    <item android:id="@+id/action_ca_nhan"
+            android:title="@string/ca_nhan"
+            android:icon="@drawable/baseline_account_circle_24"/>
+
+</menu>

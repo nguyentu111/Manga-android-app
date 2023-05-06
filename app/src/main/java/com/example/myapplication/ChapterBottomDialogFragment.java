@@ -53,12 +53,14 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
     TextView current_reading_chapter_textview;
     NestedScrollView scrollView;
     LinearLayout bottom_sheet_chapters;
+    static float chap = 0;
+    Context context;
 //    public static ChapterBottomDialogFragment newInstance(JSONArray chapters) {
 //        return new ChapterBottomDialogFragment(chapters);
 //    }
 
     public ChapterBottomDialogFragment(String currentLanguage , String mangaId, String coverUrl, String mangaName
-            , String currentChapterId, LinearLayout pagesLayout, TextView read_chapter_name){
+            , String currentChapterId, LinearLayout pagesLayout, TextView read_chapter_name, Context context){
         super();
         this.currentLanguage = currentLanguage;
         this.mangaId = mangaId;
@@ -67,6 +69,7 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
         this.currentChapterId = currentChapterId;
         this.pagesLayout =  pagesLayout;
         this.read_chapter_name =read_chapter_name;
+        this.context = context;
     }
     private int getScreenHeight(){
         return Resources.getSystem().getDisplayMetrics().heightPixels;
@@ -128,6 +131,9 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
                 .into(bottom_sheet_img_cover);
         fetchApi(view);
     }
+//    public class ChapUtil {
+//        public static float chap = 0;
+//    }
 
     private void fetchApi(View view) {
         RequestQueue queue = Volley.newRequestQueue(view.getContext());
@@ -169,6 +175,15 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
                                 textView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
+                                        chap = Float.parseFloat(chapStr);
+                                        for (Truyen tr : LichSuFragment.data_Truyen){
+                                            if (tr.getMangaId().equals(mangaId)
+                                               && Float.parseFloat(tr.getLastChapter()) < chap){
+                                                tr.setLastChapter(String.valueOf(chap));
+                                                LichSuFragment.saveLichSu(context);
+                                            }
+                                        }
+
                                         read_chapter_name.setText(calculatedName);
 
                                         if(chapterId.equals(currentChapterId)) {

@@ -30,31 +30,27 @@ public class Utils {
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try{
-                            try {
-                                JSONArray data= response.getJSONObject("chapter").getJSONArray("data");
-                                String hash = response.getJSONObject("chapter").getString("hash");
-                                for(int i = 0; i < data.length(); i++){
-                                    String pageUrl = "https://uploads.mangadex.org/data/"+hash+"/"+ data.getString(i);
-                                    ImageView imgView = new ImageView(context);
-                                    imgView.setAdjustViewBounds(true);
-                                    imgView.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                    Picasso.get()
-                                            .load(pageUrl)
+                        try {
+                            JSONArray data= response.getJSONObject("chapter").getJSONArray("data");
+                            String hash = response.getJSONObject("chapter").getString("hash");
+                            for(int i = 0; i < data.length(); i++){
+                                String pageUrl = "https://uploads.mangadex.org/data/"+hash+"/"+ data.getString(i);
+                                ImageView imgView = new ImageView(context);
+                                imgView.setAdjustViewBounds(true);
+                                imgView.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                Picasso.get()
+                                        .load(pageUrl)
 //                                        .resize(imgWidth, imgHeight)
 //                                        .centerCrop()
-                                            .into(imgView);
+                                        .into(imgView);
 //                                   ZoomageView zoomView = new ZoomageView(context);
-                                    //
+                                //
 //                                   zoomView.
-                                   // Log.v(String.valueOf(pagesLayout.getWidth()),String.valueOf(imgView.getHeight()));
+                               // Log.v(String.valueOf(pagesLayout.getWidth()),String.valueOf(imgView.getHeight()));
 //                                    zoomLayout.measure(pagesLayout.getWidth(), imgView.getHeight());
-                                    pagesLayout.addView(imgView);
-                                }
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
+                                pagesLayout.addView(imgView);
                             }
-                        }catch (Exception e){//handle Canvas: trying to draw too large(168140800bytes) bitmap.
+                        } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
                     }
@@ -67,4 +63,5 @@ public class Utils {
                 });
         queue.add(jsonObjectRequest);
     }
+
 }
