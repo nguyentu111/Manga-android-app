@@ -230,16 +230,19 @@ public class ChapterPage extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             lastChap = chapStr;
-                            if (mTruyen.getLastChapter() == null || Float.parseFloat(mTruyen.getLastChapter()) < Float.parseFloat(chapStr)){
-                                Log.d("DEBUG_lastChap","-lastChap:"+chapStr+"-mtruyen:"+mTruyen.getLastChapter());
-                                mTruyen.setLastChapter(chapStr);
-                                mTruyen.setCheck(1);
-                            }
-                            else{
-                                Log.d("DEBUG_lastChap1","-lastChap:"+chapStr+"-mtruyen:"+mTruyen.getLastChapter());
-                                mTruyen.setCheck(1);
-                            }
-
+//                            if (mTruyen.getLastChapter() == null ){//|| Float.parseFloat(mTruyen.getLastChapter()) < Float.parseFloat(chapStr)
+//                                Log.d("DEBUG_lastChap","-lastChap:"+chapStr+"-mtruyen:"+mTruyen.getLastChapter());
+//                                mTruyen.setLastChapter(chapStr);
+//                                mTruyen.setCheck(1);
+//                            }
+//                            else{
+//                                Log.d("DEBUG_lastChap1","-lastChap:"+chapStr+"-mtruyen:"+mTruyen.getLastChapter());
+//                                mTruyen.setCheck(1);
+//                            }
+                          
+                            mTruyen.setLastChapter(chapStr);
+                            mTruyen.setLastChap(chapter);
+                            mTruyen.setCheck(1);
                             for (Truyen truyen1 : data_Truyen) {
                                 if (truyen1.getMangaId().equals(mangaId)) {
                                     data_Truyen.remove(truyen1);
@@ -282,7 +285,7 @@ public class ChapterPage extends AppCompatActivity {
 
     private void callApi(){
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://api.mangadex.org/manga/"+mangaId+"/feed?limit=100&order%5Bvolume%5D=desc&order%5Bchapter%5D=desc";
+        String url = "https://api.mangadex.org/manga/"+mangaId+"/feed?limit=200&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000"
     tools:context=".DescriptionPage">
 
 
@@ -329,20 +330,21 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lnThemVaoKe"
+                android:id="@+id/rightButton"
                 android:orientation="vertical"
                 android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 >
                 <ImageView
-                    android:id="@+id/imageView33"
+                    android:id="@+id/imvBottomRight"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
-
-                    app:srcCompat="@drawable/outline_playlist_add_24" />
+                    android:background="@drawable/outline_playlist_add_24"
+                    />
                 <TextView
+                    android:id="@+id/tvBottomRight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Thêm vào kệ"

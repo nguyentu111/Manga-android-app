@@ -1,9 +1,12 @@
 package com.example.myapplication;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 public class Truyen implements Serializable {
-    String mangaId, mangaName, imgUrl, dataStr, lastChapter, finalChapter,lastPage;
+    String mangaId, mangaName, imgUrl, dataStr, lastChapter, finalChapter;
+    JSONObject lastChap=null;
     int check;
 
     public Truyen() {
@@ -74,6 +77,15 @@ public class Truyen implements Serializable {
     public void setFinalChapter(String finalChapter) {
         this.finalChapter = finalChapter;
     }
+
+    public JSONObject getLastChap() {
+        return lastChap;
+    }
+
+    public void setLastChap(JSONObject lastChap) {
+        this.lastChap = lastChap;
+    }
+
     public void convertTruyen(Truyen truyen){
         this.mangaId = truyen.getMangaId();
         this.mangaName = truyen.getMangaName();
