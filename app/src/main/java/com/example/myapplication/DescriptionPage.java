@@ -103,6 +103,7 @@ public class DescriptionPage extends AppCompatActivity {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+        finalMangaId = mangaId;
         for (Truyen truyenDaLuu : KeSachFragment.data_Truyen){
             if (truyenDaLuu.getMangaId().equals(finalMangaId)){
                 changeRightButtonToContinuteRead();
@@ -160,33 +161,24 @@ public class DescriptionPage extends AppCompatActivity {
                     } catch (JSONException e) {
                         Toast.makeText(DescriptionPage.this,"Lỗi load truyện",Toast.LENGTH_SHORT);
                         throw new RuntimeException(e);
-
                     }
                     return;
                 }
                 changeRightButtonToContinuteRead();
                 savedManga = true;
-                Truyen truyen = new Truyen();
-                truyen.setMangaId(finalMangaId);
-                truyen.setMangaName(mangaName);
-                truyen.setImgUrl(imgUrl);
-                truyen.setDataStr(dataStr);
-                truyen.setCheck(0);
-                mTruyen = truyen;
+                try {
+                    Log.v("Chapterdata ",String.valueOf(chapterData.length()));
+                    JSONObject firstChap = chapterData.getJSONObject(0);
+                    JSONObject  lastChap = chapterData.getJSONObject(chapterData.length()-1);
+                    mTruyen.setFirstChap(firstChap);
+                    mTruyen.setLastChap(lastChap);
+                } catch (JSONException e) {
+                    Log.v("DEBUG","error save last chap and firstchap");
+                }
+                data_Truyen.add(0,mTruyen);
+                KeSachFragment.loadTruyen();
+                Toast.makeText(context, "Đã lưu vào kệ", Toast.LENGTH_SHORT).show();
 
-                int a = 0;
-                for (Truyen truyen1 : data_Truyen) {
-                    if (truyen1.getMangaId().equals(finalMangaId)) {
-                        Toast.makeText(context, "Truyện đã được lưu", Toast.LENGTH_SHORT).show();
-                        a = 1;
-                        break;
-                    }
-                }
-                if (a == 0){
-                    data_Truyen.add(0,truyen);
-                    KeSachFragment.loadTruyen();
-                    Toast.makeText(context, "Đã lưu vào kệ", Toast.LENGTH_SHORT).show();
-                }
             }
         });
 

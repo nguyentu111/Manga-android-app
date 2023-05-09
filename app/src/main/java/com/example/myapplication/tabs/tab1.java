@@ -171,22 +171,9 @@ public class tab1 extends Fragment   {
                                 gridView.addView(manga);
 
                             }
-//                            Button loadmorebtn = new Button(context);
-//                            loadmorebtn.setText("Load more");
-//                            loadmorebtn.setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View view) {
-//
-//
-//                                }
-//                            });
-//                            gridView.addView(loadmorebtn);
-
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-//                        textView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                        showbtn.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     }
                 }, new Response.ErrorListener() {
 

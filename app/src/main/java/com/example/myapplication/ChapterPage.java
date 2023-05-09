@@ -37,9 +37,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ChapterPage extends AppCompatActivity {
-    Button showbtn;
     LinearLayout mainLayout;
-    LinearLayout showRs;
     JSONArray data;
     String mangaId;
     String mangaName;

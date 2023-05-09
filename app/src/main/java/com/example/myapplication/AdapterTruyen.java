@@ -59,38 +59,36 @@ public class AdapterTruyen extends ArrayAdapter<Truyen> {
         else {
             viewHolder = (viewHolder) convertView.getTag();
         }
-
         Truyen truyen = data.get(position);
-        try {
-            String lastChapter = truyen.getLastChap().getJSONObject("attributes").getString("chapter");
-            String currentReadChapter = truyen.getLastChap().getJSONObject("attributes").getString("chapter");
-            if(lastChapter.equals("null")) lastChapter="One Shot";
-            else lastChapter = "Chap "+ lastChapter;
-            if (data.size()>0){
-                if (truyen.getCheck() == 1) {// lich su
-//                    if (NumberUtils.isCreatable(lastChapter)) {
-////                    float chap1 = Float.parseFloat(truyen.getLastChapter());
-////                    float chap2 = ChapterBottomDialogFragment.chap;
-////                    truyen.setLastChapter(String.valueOf(Math.max(chap1, chap2)));
-//                        viewHolder.tvChapter.setText("Chap " + lastChapter);
-//                        Log.d("DEBUG_lchap",""+lastChapter);
-//                    } else {
-//                        loadLastChapter(truyen, truyen.getMangaId(), viewHolder.tvChapter);
-//                        Log.d("DEBUG_lchap1",""+lastChapter);
-//                    }
-                    viewHolder.tvChapter.setText(currentReadChapter);
 
+        try {
+            JSONObject lastChapter = truyen.getLastChap();//.getJSONObject("attributes").getString("chapter");
+            JSONObject currentReadChap = truyen.getCurrentReadChap();
+            if(lastChapter ==null ) Log.v("DEBUG: ","lastchap null");
+            if(currentReadChap ==null ) Log.v("DEBUG2: ","currentReadChap null");
+
+
+//            String currentReadChapter = truyen.getLastChap().getJSONObject("attributes").getString("chapter");
+//            Log.v("lastChapter",currentReadChapter.getJSONObject("attributes").getString("chapter"));
+//            if(lastChapter.equals("null")) lastChapter="One Shot";
+//            else lastChapter = "Chap "+ lastChapter;
+//            if (data.size()>0){
+
+                if (truyen.getCheck() == 1 ) {// lich su
+                    if(currentReadChap !=null){
+                        String currentReadChapterStr = currentReadChap.getJSONObject("attributes").getString("chapter");
+                        viewHolder.tvChapter.setText(currentReadChapterStr);
+                    }
                 }
                 else  {
-                    viewHolder.tvChapter.setText(lastChapter);
-//                    loadLastChapter(truyen, truyen.getMangaId(), viewHolder.tvChapter);
-//                    Log.d("DEBUG_lchap1",""+lastChapter+"-check:"+truyen.getCheck());
+                    viewHolder.tvChapter.setText(lastChapter.getJSONObject("attributes").getString("chapter"));
                 }
                 viewHolder.tvTenTruyen.setText(truyen.getMangaName());
                 Glide.with(this.context).load(truyen.getImgUrl()).into(viewHolder.ivTruyen);
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+//            }
+        } catch (Exception e) {
+            //throw new RuntimeException(e);
+            Log.v("error: ",e.getMessage());
         }
 
 
