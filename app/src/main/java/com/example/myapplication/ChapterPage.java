@@ -80,7 +80,7 @@ public class ChapterPage extends AppCompatActivity {
             callApi();
             return;
         }
-        mTruyen.setFirstChap(data.getJSONObject(1));
+        mTruyen.setFirstChap(data.getJSONObject(0));
         Map<String, Map<String,List<JSONObject>>> grouped_chapters = group_chapters_by_volume_and_chapter();
         List<String> sortedKeys=new ArrayList(grouped_chapters.keySet());
         sort_volume(sortedKeys);

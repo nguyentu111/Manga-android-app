@@ -59,7 +59,7 @@ public class KeSachFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ke_sach,container,false);
-        context = view.getContext();
+        context =  view.getContext();
         gridView = view.findViewById(R.id.gvKeSach);
 
         readKeSach();
@@ -106,6 +106,7 @@ public class KeSachFragment extends Fragment {
 
     public static void saveKeSach() {
         try {
+
             File file = File.createTempFile("dataKeSach", ".bin", context.getFilesDir());
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
