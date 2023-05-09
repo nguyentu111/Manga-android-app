@@ -48,7 +48,6 @@ public class DescriptionPage extends AppCompatActivity {
     String finalMangaId, mangaName, imgUrl;
     static Truyen mTruyen = new Truyen();
     public static ArrayList<Truyen> data_Truyen = new ArrayList<>();
-    public static ArrayList<Truyen> data_Truyen_KS = new ArrayList<>();
     public static boolean savedManga=false;
     private JSONObject lastChap= null;
     JSONObject firstChap;
@@ -70,7 +69,7 @@ public class DescriptionPage extends AppCompatActivity {
         flowChude=findViewById(R.id.flowChude);
         chapterBtn= findViewById(R.id.chapterBtn);
         rightButton= findViewById(R.id.rightButton);
-        data_Truyen_KS = LichSuFragment.data_Truyen;
+
 //        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_LA);
 //        getWindow().setStatusBarColor(Color.TRANSPARENT);
 //        getWindow().getDecorView().setSystemUiVisibility(
@@ -104,8 +103,6 @@ public class DescriptionPage extends AppCompatActivity {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-
-        finalMangaId = mangaId;
         for (Truyen truyenDaLuu : KeSachFragment.data_Truyen){
             if (truyenDaLuu.getMangaId().equals(finalMangaId)){
                 changeRightButtonToContinuteRead();
@@ -115,13 +112,13 @@ public class DescriptionPage extends AppCompatActivity {
             }
         }
         Truyen truyen = new Truyen();
-        truyen.setMangaId(finalMangaId);
+        truyen.setMangaId(mangaId);
         truyen.setMangaName(mangaName);
         truyen.setImgUrl(imgUrl);
         truyen.setDataStr(dataStr);
         for (Truyen truyen1 : LichSuFragment.data_Truyen){
             if (truyen1.getMangaId().equals(finalMangaId)){
-                truyen.setLastChapter(truyen1.getLastChapter());
+                truyen.setFirstChap(truyen1.getFirstChap());
                 truyen.setLastChap(truyen1.getLastChap());
             }
         }
@@ -147,17 +144,19 @@ public class DescriptionPage extends AppCompatActivity {
                 i.putExtra("mangaId", finalMangaId);
                 i.putExtra("mangaName",mangaName);
                 i.putExtra("imgUrl",imgUrl);
-                i.putExtra("truyen",truyen);
+                i.putExtra("truyen",mTruyen);
                 startActivity(i);
             }
         });
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(savedManga  ){
+                if(savedManga ){
                     // mở chap đã đọc gần nhất , ko có thì load chap đầu
                     try {
-                        loadChapter(mTruyen.getLastChap());
+                        if(mTruyen.getCurrentReadChap() !=null){
+                            loadChapter(mTruyen.getCurrentReadChap());
+                        }else  loadChapter(mTruyen.getFirstChap());
                     } catch (JSONException e) {
                         Toast.makeText(DescriptionPage.this,"Lỗi load truyện",Toast.LENGTH_SHORT);
                         throw new RuntimeException(e);
@@ -165,7 +164,7 @@ public class DescriptionPage extends AppCompatActivity {
                     }
                     return;
                 }
-                if(mTruyen.getLastChap()!=null) changeRightButtonToContinuteRead();
+                changeRightButtonToContinuteRead();
                 savedManga = true;
                 Truyen truyen = new Truyen();
                 truyen.setMangaId(finalMangaId);
@@ -318,12 +317,12 @@ public class DescriptionPage extends AppCompatActivity {
         imvBottomRight.setBackgroundResource(R.drawable.baseline_electric_bolt_24);
         tvBottomRight.setText("Đọc nhanh");
     }
-    private void loadChapter(JSONObject lastChap) throws JSONException {
-        Toast.makeText(DescriptionPage.this,"chay toi load chapter",Toast.LENGTH_SHORT);
-        Toast.makeText(getBaseContext(),"chay toi load read page",Toast.LENGTH_LONG);
+    private void loadChapter(JSONObject chap) throws JSONException {
+
+
         String chapterName ;
-        String chapStr = lastChap.getJSONObject("attributes").getString("chapter");
-        String title = lastChap.getJSONObject("attributes").getString("title");
+        String chapStr = chap.getJSONObject("attributes").getString("chapter");
+        String title = chap.getJSONObject("attributes").getString("title");
         if(title.equals("null") || title.toString().trim().equals("") ){
             if(chapStr.equals("null")){
                 chapterName = ("One shot");
@@ -337,17 +336,17 @@ public class DescriptionPage extends AppCompatActivity {
                 chapterName = (title);
             }
         }
+        Toast.makeText(DescriptionPage.this,"chay toi load chapter "+chapterName,Toast.LENGTH_SHORT);
+//        Intent i = new Intent(DescriptionPage.this, ReadManga.class);
 
-        Intent i = new Intent(DescriptionPage.this, ReadManga.class);
-
-        i.putExtra("chapterId", lastChap.getString("id"));
-        i.putExtra("mangaName",mangaName);
-        i.putExtra("mangaId",mTruyen.getMangaId());
-        i.putExtra("chapterName",chapterName);
-        i.putExtra("currentLanguage",imgUrl);
-        i.putExtra("coverUrl",imgUrl);
-
-        startActivity(i);
+//        i.putExtra("chapterId", lastChap.getString("id"));
+//        i.putExtra("mangaName",mangaName);
+//        i.putExtra("mangaId",mTruyen.getMangaId());
+//        i.putExtra("chapterName",chapterName);
+//        i.putExtra("currentLanguage",imgUrl);
+//        i.putExtra("coverUrl",imgUrl);
+//
+//        startActivity(i);
     }
 
 }

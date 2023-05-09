@@ -5,20 +5,17 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 public class Truyen implements Serializable {
-    String mangaId, mangaName, imgUrl, dataStr, lastChapter, finalChapter;
-    JSONObject lastChap=null;
+    String mangaId, mangaName, imgUrl, dataStr;
+    JSONObject currentReadChap=null, firstChap = null, lastChap =null;
     int check;
-
     public Truyen() {
     }
 
-    public Truyen(String mangaId, String mangaName, String imgUrl, String dataStr, String lastChapter, String finalChapter, int check) {
+    public Truyen(String mangaId, String mangaName, String imgUrl, String dataStr, String lastChapter, int check) {
         this.mangaId = mangaId;
         this.mangaName = mangaName;
         this.imgUrl = imgUrl;
         this.dataStr = dataStr;
-        this.lastChapter = lastChapter;
-        this.finalChapter = finalChapter;
         this.check = check;
     }
 
@@ -54,13 +51,6 @@ public class Truyen implements Serializable {
         this.dataStr = dataStr;
     }
 
-    public String getLastChapter() {
-        return lastChapter;
-    }
-
-    public void setLastChapter(String lastChapter) {
-        this.lastChapter = lastChapter;
-    }
 
     public int getCheck() {
         return check;
@@ -70,12 +60,21 @@ public class Truyen implements Serializable {
         this.check = check;
     }
 
-    public String getFinalChapter() {
-        return finalChapter;
+
+    public JSONObject getFirstChap() {
+        return firstChap;
     }
 
-    public void setFinalChapter(String finalChapter) {
-        this.finalChapter = finalChapter;
+    public void setFirstChap(JSONObject fistChap) {
+        this.firstChap = fistChap;
+    }
+
+    public JSONObject getCurrentReadChap() {
+        return currentReadChap;
+    }
+
+    public void setCurrentReadChap(JSONObject currentReadChap) {
+        this.currentReadChap = currentReadChap;
     }
 
     public JSONObject getLastChap() {
@@ -91,8 +90,6 @@ public class Truyen implements Serializable {
         this.mangaName = truyen.getMangaName();
         this.imgUrl = truyen.getImgUrl();
         this.dataStr = truyen.getDataStr();
-        this.lastChapter = truyen.getLastChapter();
-        this.finalChapter = truyen.getFinalChapter();
         this.check = truyen.getCheck();
     }
 }

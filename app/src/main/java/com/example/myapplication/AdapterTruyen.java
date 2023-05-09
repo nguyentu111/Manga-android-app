@@ -24,7 +24,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,26 +61,38 @@ public class AdapterTruyen extends ArrayAdapter<Truyen> {
         }
 
         Truyen truyen = data.get(position);
-        if (data.size()>0){
-            if (truyen.getCheck() == 1) {
-                if (NumberUtils.isCreatable(truyen.getLastChapter())) {
-//                    float chap1 = Float.parseFloat(truyen.getLastChapter());
-//                    float chap2 = ChapterBottomDialogFragment.chap;
-//                    truyen.setLastChapter(String.valueOf(Math.max(chap1, chap2)));
-                    viewHolder.tvChapter.setText("Chap " + truyen.getLastChapter());
-                    Log.d("DEBUG_lchap",""+truyen.getLastChapter());
-                } else {
-                    loadLastChapter(truyen, truyen.getMangaId(), viewHolder.tvChapter);
-                    Log.d("DEBUG_lchap1",""+truyen.getLastChapter());
+        try {
+            String lastChapter = truyen.getLastChap().getJSONObject("attributes").getString("chapter");
+            String currentReadChapter = truyen.getLastChap().getJSONObject("attributes").getString("chapter");
+            if(lastChapter.equals("null")) lastChapter="One Shot";
+            else lastChapter = "Chap "+ lastChapter;
+            if (data.size()>0){
+                if (truyen.getCheck() == 1) {// lich su
+//                    if (NumberUtils.isCreatable(lastChapter)) {
+////                    float chap1 = Float.parseFloat(truyen.getLastChapter());
+////                    float chap2 = ChapterBottomDialogFragment.chap;
+////                    truyen.setLastChapter(String.valueOf(Math.max(chap1, chap2)));
+//                        viewHolder.tvChapter.setText("Chap " + lastChapter);
+//                        Log.d("DEBUG_lchap",""+lastChapter);
+//                    } else {
+//                        loadLastChapter(truyen, truyen.getMangaId(), viewHolder.tvChapter);
+//                        Log.d("DEBUG_lchap1",""+lastChapter);
+//                    }
+                    viewHolder.tvChapter.setText(currentReadChapter);
+
                 }
+                else  {
+                    viewHolder.tvChapter.setText(lastChapter);
+//                    loadLastChapter(truyen, truyen.getMangaId(), viewHolder.tvChapter);
+//                    Log.d("DEBUG_lchap1",""+lastChapter+"-check:"+truyen.getCheck());
+                }
+                viewHolder.tvTenTruyen.setText(truyen.getMangaName());
+                Glide.with(this.context).load(truyen.getImgUrl()).into(viewHolder.ivTruyen);
             }
-            else  {
-                loadLastChapter(truyen, truyen.getMangaId(), viewHolder.tvChapter);
-                Log.d("DEBUG_lchap1",""+truyen.getLastChapter()+"-check:"+truyen.getCheck());
-            }
-            viewHolder.tvTenTruyen.setText(truyen.getMangaName());
-            Glide.with(this.context).load(truyen.getImgUrl()).into(viewHolder.ivTruyen);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         }
+
 
         viewHolder.ivTruyen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,64 +150,6 @@ public class AdapterTruyen extends ArrayAdapter<Truyen> {
             }
         });
     }
-    private void loadLastChapter(Truyen truyen, String mangaId,TextView textView){
-
-        String url = "https://api.mangadex.org/manga/"+mangaId+"/feed";
-        RequestQueue queue = Volley.newRequestQueue(getContext());
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            float maxChapter =0;
-                            JSONArray datas=   response.getJSONArray("data");
-
-                            for(int i=0;i<datas.length();i++){
-                                try{
-                                    String f = datas.getJSONObject(i).getJSONObject("attributes").getString("chapter");
-                                    if(!f.equals("null")){
-                                        float chap = Float.parseFloat(f);
-                                        if(maxChapter<chap) maxChapter=chap;
-                                    }else  {
-                                        textView.setText("Oneshot");
-                                        truyen.setLastChapter("Oneshot");
-                                        return;
-                                    };
-                                    if(maxChapter==0.0){
-                                        textView.setText("Chapter 0");
-                                        truyen.setLastChapter("Chapter 0");
-                                    }
-                                    else {
-                                        if((int) maxChapter % 1 ==0){
-                                            textView.setText("Chap "+Float.toString((int) maxChapter));
-                                            truyen.setLastChapter("Chap "+Float.toString((int) maxChapter));
-                                        }
-                                        else {
-                                            textView.setText("Chap "+Float.toString(maxChapter));
-                                            truyen.setLastChapter("Chap "+Float.toString(maxChapter));
-                                        }
-                                    }
-                                }catch (NumberFormatException  e){
-                                    Log.v("chapter parse string to float error,string value :",datas.getJSONObject(i).getJSONObject("attributes").getString("chapter"));
-                                    String f = datas.getJSONObject(i).getJSONObject("attributes").getString("chapter");
-
-                                    continue;
-                                }
-                            }
-                        } catch (JSONException e) {
-
-                            //throw new RuntimeException(e);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                });
-        queue.add(jsonObjectRequest);
-
-    }
-
     private class viewHolder{
         ImageView ivTruyen;
         TextView tvTenTruyen;

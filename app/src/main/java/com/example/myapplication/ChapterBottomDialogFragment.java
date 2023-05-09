@@ -178,8 +178,8 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
                                         chap = Float.parseFloat(chapStr);
                                         for (Truyen tr : LichSuFragment.data_Truyen){
                                             if (tr.getMangaId().equals(mangaId)
-                                               && Float.parseFloat(tr.getLastChapter()) < chap){
-                                                tr.setLastChapter(String.valueOf(chap));
+                                               ){
+                                                tr.setCurrentReadChap(chapter);
                                                 LichSuFragment.saveLichSu(context);
                                             }
                                         }

@@ -46,7 +46,7 @@ public class ChapterPage extends AppCompatActivity {
     String coverUrl;
     ImageView back_to_des ;
     String dataStr;
-    static String lastChap;
+
     public static ArrayList<Truyen> data_Truyen = new ArrayList<>();
     Truyen mTruyen;
     Context context;
@@ -62,7 +62,6 @@ public class ChapterPage extends AppCompatActivity {
         mangaId = extras.getString("mangaId");
         mangaName = extras.getString("mangaName");
         coverUrl = extras.getString("imgUrl");
-        DescriptionPage descriptionPage = new DescriptionPage();
         mTruyen = (Truyen) extras.getSerializable("truyen");
 
         try {
@@ -78,53 +77,12 @@ public class ChapterPage extends AppCompatActivity {
             }
         });
     }
-    private void setShowRs(){
-        int mesuredHeight = showRs.getMeasuredHeight();
-        showbtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                int currentHeight = showRs.getMeasuredHeight();
-                if(currentHeight == 0 ){
-                    ValueAnimator anim = ValueAnimator.ofInt(0,mesuredHeight);
-                    anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                            int val = (Integer) valueAnimator.getAnimatedValue();
-                            Log.v("val",Integer.toString(val));
-                            ViewGroup.LayoutParams layoutParams = showRs.getLayoutParams();
-                            layoutParams.height = val;
-                            showRs.setLayoutParams(layoutParams);
-                        }
-                    });
-                    anim.setDuration(200);
-                    anim.start();
-                }else{
-                    ValueAnimator anim = ValueAnimator.ofInt(mesuredHeight,0);
-                    anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                            int val = (Integer) valueAnimator.getAnimatedValue();
-                            Log.v("val",Integer.toString(val));
-                            ViewGroup.LayoutParams layoutParams = showRs.getLayoutParams();
-                            layoutParams.height = val;
-                            showRs.setLayoutParams(layoutParams);
-                        }
-                    });
-                    anim.setDuration(200);
-                    anim.start();
-                }
-
-
-            }
-        });
-    }
     private void loadChapters() throws JSONException {
         if(data==null){
             callApi();
             return;
         }
-
+        mTruyen.setFirstChap(data.getJSONObject(1));
         Map<String, Map<String,List<JSONObject>>> grouped_chapters = group_chapters_by_volume_and_chapter();
         List<String> sortedKeys=new ArrayList(grouped_chapters.keySet());
         sort_volume(sortedKeys);
@@ -229,19 +187,7 @@ public class ChapterPage extends AppCompatActivity {
                     one_chap_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            lastChap = chapStr;
-//                            if (mTruyen.getLastChapter() == null ){//|| Float.parseFloat(mTruyen.getLastChapter()) < Float.parseFloat(chapStr)
-//                                Log.d("DEBUG_lastChap","-lastChap:"+chapStr+"-mtruyen:"+mTruyen.getLastChapter());
-//                                mTruyen.setLastChapter(chapStr);
-//                                mTruyen.setCheck(1);
-//                            }
-//                            else{
-//                                Log.d("DEBUG_lastChap1","-lastChap:"+chapStr+"-mtruyen:"+mTruyen.getLastChapter());
-//                                mTruyen.setCheck(1);
-//                            }
-                          
-                            mTruyen.setLastChapter(chapStr);
-                            mTruyen.setLastChap(chapter);
+                            mTruyen.setCurrentReadChap(chapter);
                             mTruyen.setCheck(1);
                             for (Truyen truyen1 : data_Truyen) {
                                 if (truyen1.getMangaId().equals(mangaId)) {
@@ -292,10 +238,6 @@ public class ChapterPage extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             data = response.getJSONArray("data");
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                        try {
                             loadChapters();
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
