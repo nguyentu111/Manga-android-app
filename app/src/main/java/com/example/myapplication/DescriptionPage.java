@@ -48,7 +48,7 @@ public class DescriptionPage extends AppCompatActivity {
     String finalMangaId, mangaName, imgUrl;
     static Truyen mTruyen = new Truyen();
     public static ArrayList<Truyen> data_Truyen = new ArrayList<>();
-    public static boolean savedManga=false;
+    public static boolean savedManga;
     private JSONObject lastChap= null;
     JSONObject firstChap;
 
@@ -69,7 +69,7 @@ public class DescriptionPage extends AppCompatActivity {
         flowChude=findViewById(R.id.flowChude);
         chapterBtn= findViewById(R.id.chapterBtn);
         rightButton= findViewById(R.id.rightButton);
-
+        savedManga = false; // đừng động tới cái này !!!
 //        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_LA);
 //        getWindow().setStatusBarColor(Color.TRANSPARENT);
 //        getWindow().getDecorView().setSystemUiVisibility(
@@ -93,7 +93,7 @@ public class DescriptionPage extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         try {
-            loadChapterData(data.getString("id"));
+            loadChapterData(data.getString("id"),null);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -121,6 +121,7 @@ public class DescriptionPage extends AppCompatActivity {
             if (truyen1.getMangaId().equals(finalMangaId)){
                 truyen.setFirstChap(truyen1.getFirstChap());
                 truyen.setLastChap(truyen1.getLastChap());
+                truyen.setCurrentReadChap(truyen1.getCurrentReadChap());
             }
         }
         mTruyen = truyen;
@@ -152,33 +153,7 @@ public class DescriptionPage extends AppCompatActivity {
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(savedManga ){
-                    // mở chap đã đọc gần nhất , ko có thì load chap đầu
-                    try {
-                        if(mTruyen.getCurrentReadChap() !=null){
-                            loadChapter(mTruyen.getCurrentReadChap());
-                        }else  loadChapter(mTruyen.getFirstChap());
-                    } catch (JSONException e) {
-                        Toast.makeText(DescriptionPage.this,"Lỗi load truyện",Toast.LENGTH_SHORT);
-                        throw new RuntimeException(e);
-                    }
-                    return;
-                }
-                changeRightButtonToContinuteRead();
-                savedManga = true;
-                try {
-                    Log.v("Chapterdata ",String.valueOf(chapterData.length()));
-                    JSONObject firstChap = chapterData.getJSONObject(0);
-                    JSONObject  lastChap = chapterData.getJSONObject(chapterData.length()-1);
-                    mTruyen.setFirstChap(firstChap);
-                    mTruyen.setLastChap(lastChap);
-                } catch (JSONException e) {
-                    Log.v("DEBUG","error save last chap and firstchap");
-                }
-                data_Truyen.add(0,mTruyen);
-                KeSachFragment.loadTruyen();
-                Toast.makeText(context, "Đã lưu vào kệ", Toast.LENGTH_SHORT).show();
-
+                handleClickSave();
             }
         });
 
@@ -279,7 +254,7 @@ public class DescriptionPage extends AppCompatActivity {
 
 
     }
-    private void loadChapterData(String mangaId){
+    private void loadChapterData(String mangaId,Runnable callback){
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "https://api.mangadex.org/manga/"+mangaId+"/feed?limit=200&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -288,6 +263,7 @@ public class DescriptionPage extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             chapterData = response.getJSONArray("data");
+                            if(callback !=null) callback.run();
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -321,24 +297,68 @@ public class DescriptionPage extends AppCompatActivity {
             }else{
                 chapterName = ("Ch."+chapStr);
             }
-        }else{
-            if(chapterData.length()==1){
-                chapterName = ("Ch."+chapStr+" - "+title);
-            }else{
+        }else {
+            if (chapterData.length() == 1) {
+                chapterName = ("Ch." + chapStr + " - " + title);
+            } else {
                 chapterName = (title);
             }
         }
-        Toast.makeText(DescriptionPage.this,"chay toi load chapter "+chapterName,Toast.LENGTH_SHORT);
-//        Intent i = new Intent(DescriptionPage.this, ReadManga.class);
+        Intent i = new Intent(DescriptionPage.this, ReadManga.class);
 
-//        i.putExtra("chapterId", lastChap.getString("id"));
-//        i.putExtra("mangaName",mangaName);
-//        i.putExtra("mangaId",mTruyen.getMangaId());
-//        i.putExtra("chapterName",chapterName);
-//        i.putExtra("currentLanguage",imgUrl);
-//        i.putExtra("coverUrl",imgUrl);
-//
-//        startActivity(i);
+        i.putExtra("chapterId", lastChap.getString("id"));
+        i.putExtra("mangaName",mangaName);
+        i.putExtra("mangaId",mTruyen.getMangaId());
+        i.putExtra("chapterName",chapterName);
+        i.putExtra("currentLanguage",imgUrl);
+        i.putExtra("coverUrl",imgUrl);
+
+        startActivity(i);
     }
+    private void handleClickSave(){
+        if(savedManga ){
+            // mở chap đã đọc gần nhất , ko có thì load chap đầu
+            Log.v("DEBUG QUICK READ",mTruyen.getFirstChap());
+            try {
+                if(mTruyen.getCurrentReadChap() !=null){
+                    loadChapter(new JSONObject(mTruyen.getCurrentReadChap()));
+                }else  loadChapter(new JSONObject(mTruyen.getFirstChap()));
+            } catch (JSONException e) {
+                Toast.makeText(DescriptionPage.this,"Lỗi load truyện",Toast.LENGTH_SHORT);
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+        changeRightButtonToContinuteRead();
+        savedManga = true;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if(chapterData == null) {
+                    throw new RuntimeException(new Exception("Lỗi fetch chapterdata in des page"));
+                }
+                try {
+                    JSONObject firstChap = chapterData.getJSONObject(0);
+                    JSONObject  lastChap = chapterData.getJSONObject(chapterData.length()-1);
+                    Log.v("DEBUG firsstchap",firstChap.toString());
+                    mTruyen.setFirstChap(firstChap.toString());
+                    mTruyen.setLastChap(lastChap.toString());
 
+                } catch (JSONException e) {
+                    Log.v("DEBUG","error save last chap and firstchap");
+                    throw new RuntimeException(e);
+                }
+                data_Truyen.add(0,mTruyen);
+                KeSachFragment.loadTruyen();
+            }
+        };
+        if(chapterData !=null){
+            runnable.run();
+        }else{
+            loadChapterData(mTruyen.getMangaId(),runnable);
+        }
+
+
+
+    }
 }

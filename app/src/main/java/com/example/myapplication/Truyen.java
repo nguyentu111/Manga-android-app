@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class Truyen implements Serializable {
     String mangaId, mangaName, imgUrl, dataStr;
-    JSONObject currentReadChap=null, firstChap = null, lastChap =null;
+    String currentReadChap=null, firstChap = null, lastChap =null;
     int check;
     public Truyen() {
     }
@@ -61,27 +61,27 @@ public class Truyen implements Serializable {
     }
 
 
-    public JSONObject getFirstChap() {
-        return firstChap;
-    }
-
-    public void setFirstChap(JSONObject fistChap) {
-        this.firstChap = fistChap;
-    }
-
-    public JSONObject getCurrentReadChap() {
+    public String getCurrentReadChap() {
         return currentReadChap;
     }
 
-    public void setCurrentReadChap(JSONObject currentReadChap) {
+    public void setCurrentReadChap(String currentReadChap) {
         this.currentReadChap = currentReadChap;
     }
 
-    public JSONObject getLastChap() {
+    public String getFirstChap() {
+        return firstChap;
+    }
+
+    public void setFirstChap(String firstChap) {
+        this.firstChap = firstChap;
+    }
+
+    public String getLastChap() {
         return lastChap;
     }
 
-    public void setLastChap(JSONObject lastChap) {
+    public void setLastChap(String lastChap) {
         this.lastChap = lastChap;
     }
 

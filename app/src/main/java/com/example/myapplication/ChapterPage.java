@@ -80,7 +80,7 @@ public class ChapterPage extends AppCompatActivity {
             callApi();
             return;
         }
-        mTruyen.setFirstChap(data.getJSONObject(0));
+        mTruyen.setFirstChap(data.getJSONObject(0).toString());
         Map<String, Map<String,List<JSONObject>>> grouped_chapters = group_chapters_by_volume_and_chapter();
         List<String> sortedKeys=new ArrayList(grouped_chapters.keySet());
         sort_volume(sortedKeys);
@@ -185,7 +185,7 @@ public class ChapterPage extends AppCompatActivity {
                     one_chap_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            mTruyen.setCurrentReadChap(chapter);
+                            mTruyen.setCurrentReadChap(chapter.toString());
                             mTruyen.setCheck(1);
                             for (Truyen truyen1 : data_Truyen) {
                                 if (truyen1.getMangaId().equals(mangaId)) {

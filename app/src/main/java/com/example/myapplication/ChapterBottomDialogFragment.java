@@ -179,7 +179,7 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
                                         for (Truyen tr : LichSuFragment.data_Truyen){
                                             if (tr.getMangaId().equals(mangaId)
                                                ){
-                                                tr.setCurrentReadChap(chapter);
+                                                tr.setCurrentReadChap(chapter.toString());
                                                 LichSuFragment.saveLichSu(context);
                                             }
                                         }

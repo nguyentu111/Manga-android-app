@@ -62,8 +62,8 @@ public class AdapterTruyen extends ArrayAdapter<Truyen> {
         Truyen truyen = data.get(position);
 
         try {
-            JSONObject lastChapter = truyen.getLastChap();//.getJSONObject("attributes").getString("chapter");
-            JSONObject currentReadChap = truyen.getCurrentReadChap();
+            JSONObject lastChapter = new JSONObject(truyen.getLastChap());//.getJSONObject("attributes").getString("chapter");
+            JSONObject currentReadChap = new JSONObject(truyen.getCurrentReadChap());
             if(lastChapter ==null ) Log.v("DEBUG: ","lastchap null");
             if(currentReadChap ==null ) Log.v("DEBUG2: ","currentReadChap null");
 
