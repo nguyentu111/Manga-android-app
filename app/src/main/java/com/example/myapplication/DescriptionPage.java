@@ -51,7 +51,7 @@ public class DescriptionPage extends AppCompatActivity {
     public static boolean savedManga;
     private JSONObject lastChap= null;
     JSONObject firstChap;
-
+    LinearLayout fastReadBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +69,8 @@ public class DescriptionPage extends AppCompatActivity {
         flowChude=findViewById(R.id.flowChude);
         chapterBtn= findViewById(R.id.chapterBtn);
         rightButton= findViewById(R.id.rightButton);
-        savedManga = false; // đừng động tới cái này !!!
+        fastReadBtn = findViewById(R.id.fastReadBtn);
+        savedManga = false; 
 //        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_LA);
 //        getWindow().setStatusBarColor(Color.TRANSPARENT);
 //        getWindow().getDecorView().setSystemUiVisibility(
@@ -106,9 +107,7 @@ public class DescriptionPage extends AppCompatActivity {
         finalMangaId = mangaId;
         for (Truyen truyenDaLuu : KeSachFragment.data_Truyen){
             if (truyenDaLuu.getMangaId().equals(finalMangaId)){
-                changeRightButtonToContinuteRead();
-                savedManga = true;
-
+               savedManga = true;
                 break;
             }
         }
@@ -161,6 +160,19 @@ public class DescriptionPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        fastReadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if(mTruyen.getCurrentReadChap() !=null){
+                        loadChapter(new JSONObject(mTruyen.getCurrentReadChap()));
+                    }else  loadChapter(new JSONObject(mTruyen.getFirstChap()));
+                } catch (JSONException e) {
+                    Toast.makeText(DescriptionPage.this,"Lỗi đọc nhanh truyện",Toast.LENGTH_SHORT);
+                    //throw new RuntimeException(e);
+                }
             }
         });
     }
@@ -278,13 +290,6 @@ public class DescriptionPage extends AppCompatActivity {
                 });
         queue.add(jsonObjectRequest);
     }
-    public void changeRightButtonToContinuteRead(){
-        savedManga = true;
-        ImageView imvBottomRight = findViewById(R.id.imvBottomRight);
-        TextView tvBottomRight = findViewById(R.id.tvBottomRight);
-        imvBottomRight.setBackgroundResource(R.drawable.baseline_electric_bolt_24);
-        tvBottomRight.setText("Đọc nhanh");
-    }
     private void loadChapter(JSONObject chap) throws JSONException {
 
 
@@ -316,20 +321,11 @@ public class DescriptionPage extends AppCompatActivity {
         startActivity(i);
     }
     private void handleClickSave(){
-        if(savedManga ){
-            // mở chap đã đọc gần nhất , ko có thì load chap đầu
-            Log.v("DEBUG QUICK READ",mTruyen.getFirstChap());
-            try {
-                if(mTruyen.getCurrentReadChap() !=null){
-                    loadChapter(new JSONObject(mTruyen.getCurrentReadChap()));
-                }else  loadChapter(new JSONObject(mTruyen.getFirstChap()));
-            } catch (JSONException e) {
-                Toast.makeText(DescriptionPage.this,"Lỗi load truyện",Toast.LENGTH_SHORT);
-                throw new RuntimeException(e);
-            }
+        if(savedManga){// về sau chỉnh lại thành xóa truyện đã lưu
+            Toast.makeText(DescriptionPage.this , "Truyện đã nằm trong kệ",Toast.LENGTH_LONG);
             return;
         }
-        changeRightButtonToContinuteRead();
+
         savedManga = true;
         Runnable runnable = new Runnable() {
             @Override
@@ -343,7 +339,7 @@ public class DescriptionPage extends AppCompatActivity {
                     Log.v("DEBUG firsstchap",firstChap.toString());
                     mTruyen.setFirstChap(firstChap.toString());
                     mTruyen.setLastChap(lastChap.toString());
-
+                    Toast.makeText(DescriptionPage.this , "Lưu thành công",Toast.LENGTH_LONG);
                 } catch (JSONException e) {
                     Log.v("DEBUG","error save last chap and firstchap");
                     throw new RuntimeException(e);
@@ -354,6 +350,7 @@ public class DescriptionPage extends AppCompatActivity {
         };
         if(chapterData !=null){
             runnable.run();
+            Toast.makeText(DescriptionPage.this , "Lưu thành công",Toast.LENGTH_LONG);
         }else{
             loadChapterData(mTruyen.getMangaId(),runnable);
         }
