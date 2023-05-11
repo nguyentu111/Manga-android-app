@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.otaliastudios.zoom.ZoomLayout;
 import com.squareup.picasso.Picasso;
 
@@ -25,43 +29,35 @@ public class Utils {
     public static void loadPages(LinearLayout pagesLayout, String chapterId, Context context) {
         pagesLayout.removeAllViews();
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "https://api.mangadex.org/at-home/server/"+chapterId;
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray data= response.getJSONObject("chapter").getJSONArray("data");
-                            String hash = response.getJSONObject("chapter").getString("hash");
-                            for(int i = 0; i < data.length(); i++){
-                                String pageUrl = "https://uploads.mangadex.org/data/"+hash+"/"+ data.getString(i);
-                                ImageView imgView = new ImageView(context);
-                                imgView.setAdjustViewBounds(true);
-                                imgView.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                Picasso.get()
-                                        .load(pageUrl)
-//                                        .resize(imgWidth, imgHeight)
-//                                        .centerCrop()
-                                        .into(imgView);
-//                                   ZoomageView zoomView = new ZoomageView(context);
-                                //
-//                                   zoomView.
-                               // Log.v(String.valueOf(pagesLayout.getWidth()),String.valueOf(imgView.getHeight()));
-//                                    zoomLayout.measure(pagesLayout.getWidth(), imgView.getHeight());
-                                pagesLayout.addView(imgView);
-                            }
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }, new Response.ErrorListener() {
+        String url = "https://api.mangadex.org/at-home/server/" + chapterId;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+            try {
+                JSONArray data = response.getJSONObject("chapter").getJSONArray("data");
+                String hash = response.getJSONObject("chapter").getString("hash");
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                RequestOptions requestOptions = new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .dontTransform()
+                        .encodeFormat(Bitmap.CompressFormat.WEBP)
+                        .encodeQuality(80)
+                        .override(1920, 1080);
+
+                // Loop through the image URLs and load each image using Glide
+                for (int i = 0; i < data.length(); i++) {
+                    String pageUrl = "https://uploads.mangadex.org/data/" + hash + "/" + data.getString(i);
+                    ImageView imgView = new ImageView(context);
+                    imgView.setAdjustViewBounds(true);
+                    Glide.with(context)
+                            .load(pageUrl)
+                            .apply(requestOptions)
+                            .fitCenter()
+                            .into(imgView);
+                    pagesLayout.addView(imgView);
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }, error -> Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show());
         queue.add(jsonObjectRequest);
     }
-
 }

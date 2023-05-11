@@ -39,11 +39,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
         implements View.OnClickListener {
     public static final String TAG = "ChapterBottomDialog";
     String currentLanguage;
     String mangaId;
+    String chapter;
     String coverUrl;
     String mangaName;
     String currentChapterId;
@@ -60,10 +65,11 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
 //    }
 
     public ChapterBottomDialogFragment(String currentLanguage , String mangaId, String coverUrl, String mangaName
-            , String currentChapterId, LinearLayout pagesLayout, TextView read_chapter_name, Context context){
+            , String currentChapterId, LinearLayout pagesLayout, TextView read_chapter_name, Context context, String chapter){
         super();
         this.currentLanguage = currentLanguage;
         this.mangaId = mangaId;
+        this.chapter = chapter;
         this.coverUrl=coverUrl;
         this.mangaName=mangaName;
         this.currentChapterId = currentChapterId;
@@ -75,9 +81,10 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
         return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
     public void scrollToCurrentChapter(){
-        if(bottom_sheet_chapters !=null){
+        if(bottom_sheet_chapters !=null && current_reading_chapter_textview != null){
             scrollView.scrollTo(0, ((int) (current_reading_chapter_textview.getTop() )));
         }
+        else Log.d("DEBUG_textViewChap", "scrollToCurrentChapter");
     }
     @NonNull @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -176,12 +183,34 @@ public class ChapterBottomDialogFragment extends BottomSheetDialogFragment
                                     @Override
                                     public void onClick(View view) {
                                         chap = Float.parseFloat(chapStr);
+                                        List<Truyen> truyensToUpdate = new ArrayList<>();
                                         for (Truyen tr : LichSuFragment.data_Truyen){
-                                            if (tr.getMangaId().equals(mangaId)
-                                               ){
-                                                tr.setCurrentReadChap(chapter.toString());
-                                                LichSuFragment.saveLichSu(context);
+                                            if (tr.getMangaId().equals(mangaId)){
+                                                tr.setCurrentReadChapJSONObject(chapter.toString());
+                                                ReadManga.currentChapJSON = chapter.toString();
+                                                tr.setCurrentReadChap(String.valueOf(chap));
+                                                truyensToUpdate.add(tr);
                                             }
+                                        }
+
+                                        for (Truyen tr : truyensToUpdate){
+                                            LichSuFragment.data_Truyen.set(LichSuFragment.data_Truyen.indexOf(tr), tr);
+                                            LichSuFragment.loadTruyen(context);
+                                        }
+
+                                        truyensToUpdate.clear();
+                                        for (Truyen tr : DescriptionPage.data_Truyen){
+                                            if (tr.getMangaId().equals(mangaId)){
+                                                tr.setCurrentReadChapJSONObject(chapter.toString());
+                                                ReadManga.currentChapJSON = chapter.toString();
+                                                tr.setCurrentReadChap(String.valueOf(chap));
+                                                truyensToUpdate.add(tr);
+                                            }
+                                        }
+
+                                        for (Truyen tr : truyensToUpdate){
+                                            DescriptionPage.data_Truyen.set(DescriptionPage.data_Truyen.indexOf(tr), tr);
+                                            KeSachFragment.loadTruyen(context);
                                         }
 
                                         read_chapter_name.setText(calculatedName);

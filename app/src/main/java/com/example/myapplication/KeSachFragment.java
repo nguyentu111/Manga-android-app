@@ -1,43 +1,16 @@
 package com.example.myapplication;
 
-import static android.content.Intent.getIntent;
-
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,7 +19,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 public class KeSachFragment extends Fragment {
     GridView gridView;
@@ -73,14 +46,22 @@ public class KeSachFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (adapter_Truyen != null) {
-            loadTruyen();
+            loadTruyen(context);
             adapter_Truyen.notifyDataSetChanged();
         }
     }
 
-    public static void loadTruyen() {
+    private static void freshDataTruyen(ArrayList<Truyen> data_Truyen) {
+        if (data_Truyen.size()>1){
+            LinkedHashSet<Truyen> uniqueTruyens = new LinkedHashSet<>(data_Truyen);
+            data_Truyen.clear();
+            data_Truyen.addAll(uniqueTruyens);
+        }
+    }
+    public static void loadTruyen(Context context) {
         data_Truyen = descriptionPage.data_Truyen;
-        saveKeSach();
+        freshDataTruyen(data_Truyen);
+        saveKeSach(context);
     }
 
 
@@ -99,14 +80,15 @@ public class KeSachFragment extends Fragment {
             ois.close();
             fis.close();
 
+            freshDataTruyen(data_Truyen);
+
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public static void saveKeSach() {
+    public static void saveKeSach(Context context) {
         try {
-
             File file = File.createTempFile("dataKeSach", ".bin", context.getFilesDir());
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);

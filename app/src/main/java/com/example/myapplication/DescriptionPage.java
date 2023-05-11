@@ -1,7 +1,5 @@
 package com.example.myapplication;
-import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,11 +25,11 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 public class DescriptionPage extends AppCompatActivity {
     ImageView imgCoverDes;
@@ -46,12 +46,16 @@ public class DescriptionPage extends AppCompatActivity {
     LinearLayout chapterBtn, rightButton;
     JSONArray chapterData;
     String finalMangaId, mangaName, imgUrl;
-    static Truyen mTruyen = new Truyen();
+    static Truyen mTruyen = ReadManga.mTruyen;
+    static Truyen mTruyenKS;
     public static ArrayList<Truyen> data_Truyen = new ArrayList<>();
+    static String currentChapJSON;
     public static boolean savedManga;
     private JSONObject lastChap= null;
     JSONObject firstChap;
     LinearLayout fastReadBtn;
+    String dataStr;
+    boolean check1 = false; // kiểm tra truyện đã lưu chưa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,9 +81,17 @@ public class DescriptionPage extends AppCompatActivity {
 //                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
 //                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 //        );
+        if (mTruyen == null){
+            ReadManga.mTruyen = new Truyen();
+            mTruyen = ReadManga.mTruyen;
+        }
+        else {
+            ReadManga.mTruyen = new Truyen();
+            mTruyen = ReadManga.mTruyen;
+        }
         Bundle extras = getIntent().getExtras();
         if (extras == null) return ;
-        String dataStr = extras.getString("data");
+        dataStr = extras.getString("data");
         JSONObject data = null;
         try {
             data = new JSONObject(dataStr);
@@ -105,40 +117,69 @@ public class DescriptionPage extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         finalMangaId = mangaId;
-        for (Truyen truyenDaLuu : KeSachFragment.data_Truyen){
+        for (Truyen truyenDaLuu : data_Truyen){
             if (truyenDaLuu.getMangaId().equals(finalMangaId)){
                savedManga = true;
-                break;
+               break;
             }
         }
         Truyen truyen = new Truyen();
-        truyen.setMangaId(mangaId);
+        truyen.setMangaId(finalMangaId);
         truyen.setMangaName(mangaName);
         truyen.setImgUrl(imgUrl);
         truyen.setDataStr(dataStr);
+
+//        if (LichSuFragment.data_Truyen.size() > 0){
+//
+//        }
+        boolean check = false;
+        List<Truyen> truyensToUpdate = new ArrayList<>();
         for (Truyen truyen1 : LichSuFragment.data_Truyen){
             if (truyen1.getMangaId().equals(finalMangaId)){
                 truyen.setFirstChap(truyen1.getFirstChap());
                 truyen.setLastChap(truyen1.getLastChap());
-                truyen.setCurrentReadChap(truyen1.getCurrentReadChap());
+                truyen.setCurrentReadChapJSONObject(truyen1.getCurrentReadChapJSONObject());
+                truyensToUpdate.add(truyen);
+                Log.d("DEBUGmTruyencJSONLLS", ""+truyen.getCurrentReadChapJSONObject());
+                check = true;
+                check1 = true;
+            }
+        }
+
+        for (Truyen tr : truyensToUpdate){
+            if (LichSuFragment.data_Truyen.contains(tr)) {
+                LichSuFragment.data_Truyen.set(LichSuFragment.data_Truyen.indexOf(tr), tr);
+                LichSuFragment.loadTruyen(context);
+            }
+        }
+
+
+        if (check == false){
+            truyensToUpdate.clear();
+            for (Truyen truyen1 : KeSachFragment.data_Truyen){
+                if (truyen1.getMangaId().equals(finalMangaId)){
+                    truyen.setFirstChap(truyen1.getFirstChap());
+                    truyen.setLastChap(truyen1.getLastChap());
+                    truyen.setCurrentReadChapJSONObject(truyen1.getCurrentReadChapJSONObject());
+                    truyensToUpdate.add(truyen);
+                    Log.d("DEBUGmTruyencJSONKKS", ""+truyen.getCurrentReadChapJSONObject());
+                    check1 = true;
+                }
+            }
+            for (Truyen tr : truyensToUpdate){
+                if (DescriptionPage.data_Truyen.contains(tr)) {
+                    DescriptionPage.data_Truyen.set(DescriptionPage.data_Truyen.indexOf(tr), tr);
+                    KeSachFragment.loadTruyen(context);
+                }
+
             }
         }
         mTruyen = truyen;
+        Log.d("DEBUGmTruyencJSON", ""+mTruyen.getCurrentReadChapJSONObject());
+
         chapterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Truyen truyen = new Truyen();
-//                truyen.setMangaId(finalMangaId);
-//                truyen.setMangaName(mangaName);
-//                truyen.setImgUrl(imgUrl);
-//                truyen.setDataStr(dataStr);
-//                for (Truyen truyen1 : LichSuFragment.data_Truyen){
-//                    if (truyen1.getMangaId().equals(finalMangaId)){
-//                        truyen.setLastChapter(truyen1.getLastChapter());
-//                    }
-//                }
-//                mTruyen = truyen;
-//                mTruyen.convertTruyen(truyen);
 
                 Intent i = new Intent(DescriptionPage.this, ChapterPage.class);
                 if(chapterData !=null) i.putExtra("data",chapterData.toString());
@@ -152,7 +193,10 @@ public class DescriptionPage extends AppCompatActivity {
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handleClickSave();
+                mTruyenKS = mTruyen;
+                mTruyenKS.setCheck(0);
+                handleClickSave(true, null);
+
             }
         });
 
@@ -165,17 +209,37 @@ public class DescriptionPage extends AppCompatActivity {
         fastReadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    if(mTruyen.getCurrentReadChap() !=null){
-                        loadChapter(new JSONObject(mTruyen.getCurrentReadChap()));
-                    }else  loadChapter(new JSONObject(mTruyen.getFirstChap()));
-                } catch (JSONException e) {
-                    Toast.makeText(DescriptionPage.this,"Lỗi đọc nhanh truyện",Toast.LENGTH_SHORT);
-                    //throw new RuntimeException(e);
-                }
+                handleClickSave(false, new loadChapJSONCallback() {
+                    @Override
+                    public void onLoadChapJSON(Truyen mTruyen1) {
+                        if (check1 == false){  // truyen chưa lưu
+                            mTruyen.setFirstChap(mTruyen1.getFirstChap());
+                            mTruyen.setLastChap(mTruyen1.getLastChap());
+                        }
+//                        if (mTruyen.getMangaId().equals(ReadManga.mTruyen.getMangaId())){
+//                            mTruyen.setCurrentReadChapJSONObject(ReadManga.currentChapJSON);
+//                            Log.d("DEBUG_currentChapJSONtemp", "currentChapJSONtemp");
+//                        }
+                        try {
+                            if(mTruyen.getCurrentReadChapJSONObject() != null){
+                                Log.d("DEBUG_currentChapCallback1", mTruyen.getCurrentReadChapJSONObject());
+                                loadChapter(new JSONObject(mTruyen.getCurrentReadChapJSONObject()));
+                            }
+                            else {
+                                loadChapter(new JSONObject(mTruyen.getFirstChap()));
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(DescriptionPage.this,"Lỗi đọc nhanh truyện",Toast.LENGTH_SHORT);
+                            //throw new RuntimeException(e);
+                        }
+
+                    }
+                });
+
             }
         });
     }
+
     private void loadInfo(JSONObject data, String imgUrl) throws JSONException {
         JSONArray relationships = data.getJSONArray("relationships");
         //artist
@@ -292,10 +356,10 @@ public class DescriptionPage extends AppCompatActivity {
     }
     private void loadChapter(JSONObject chap) throws JSONException {
 
-
         String chapterName ;
         String chapStr = chap.getJSONObject("attributes").getString("chapter");
         String title = chap.getJSONObject("attributes").getString("title");
+        String currentLanguage =  chap.getJSONObject("attributes").getString("translatedLanguage");
         if(title.equals("null") || title.toString().trim().equals("") ){
             if(chapStr.equals("null")){
                 chapterName = ("One shot");
@@ -311,51 +375,98 @@ public class DescriptionPage extends AppCompatActivity {
         }
         Intent i = new Intent(DescriptionPage.this, ReadManga.class);
 
-        i.putExtra("chapterId", lastChap.getString("id"));
+        i.putExtra("chapterId", chap.getString("id"));
+        i.putExtra("chapterName",chapterName);
         i.putExtra("mangaName",mangaName);
         i.putExtra("mangaId",mTruyen.getMangaId());
-        i.putExtra("chapterName",chapterName);
-        i.putExtra("currentLanguage",imgUrl);
+        i.putExtra("currentLanguage",currentLanguage);
         i.putExtra("coverUrl",imgUrl);
+        i.putExtra("mTruyen",mTruyen);
+        i.putExtra("chapter", String.valueOf(chap));
 
         startActivity(i);
     }
-    private void handleClickSave(){
-        if(savedManga){// về sau chỉnh lại thành xóa truyện đã lưu
-            Toast.makeText(DescriptionPage.this , "Truyện đã nằm trong kệ",Toast.LENGTH_LONG);
-            return;
-        }
-
-        savedManga = true;
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                if(chapterData == null) {
-                    throw new RuntimeException(new Exception("Lỗi fetch chapterdata in des page"));
-                }
-                try {
-                    JSONObject firstChap = chapterData.getJSONObject(0);
-                    JSONObject  lastChap = chapterData.getJSONObject(chapterData.length()-1);
-                    Log.v("DEBUG firsstchap",firstChap.toString());
-                    mTruyen.setFirstChap(firstChap.toString());
-                    mTruyen.setLastChap(lastChap.toString());
-                    Toast.makeText(DescriptionPage.this , "Lưu thành công",Toast.LENGTH_LONG);
-                } catch (JSONException e) {
-                    Log.v("DEBUG","error save last chap and firstchap");
-                    throw new RuntimeException(e);
-                }
-                data_Truyen.add(0,mTruyen);
-                KeSachFragment.loadTruyen();
+    private void handleClickSave( boolean check, loadChapJSONCallback callback ){
+        if (check == true){ // khi click lưu vào kệ sách
+            if(savedManga){// về sau chỉnh lại thành xóa truyện đã lưu
+                Toast.makeText(DescriptionPage.this , "Truyện đã nằm trong kệ",Toast.LENGTH_SHORT).show();
+                return;
             }
-        };
-        if(chapterData !=null){
-            runnable.run();
-            Toast.makeText(DescriptionPage.this , "Lưu thành công",Toast.LENGTH_LONG);
-        }else{
-            loadChapterData(mTruyen.getMangaId(),runnable);
+            savedManga = true;
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    if(chapterData == null) {
+                        throw new RuntimeException(new Exception("Lỗi fetch chapterdata in des page"));
+                    }
+
+                    try {
+                        JSONObject firstChap = chapterData.getJSONObject(0);
+                        JSONObject  lastChap1 = chapterData.getJSONObject(chapterData.length()-1);
+                        Log.v("DEBUG firsstchap",firstChap.toString());
+//                        lastChap = firstChap;
+                        mTruyenKS.setFirstChap(firstChap.toString());
+                        mTruyenKS.setLastChap(lastChap1.toString());
+                        mTruyenKS.setCheck(0);
+                    }
+                    catch (JSONException e) {
+                        Log.v("DEBUG","error save last chap and firstchap");
+                        throw new RuntimeException(e);
+                    }
+
+                    data_Truyen.add(0,mTruyenKS);
+                    freshDataTruyen(data_Truyen);
+                    KeSachFragment.loadTruyen(context);
+                    Toast.makeText(context, "Lưu thành công",Toast.LENGTH_SHORT).show();
+                }
+            };
+            if(chapterData !=null){
+                runnable.run();
+
+            }else{
+                loadChapterData(mTruyenKS.getMangaId(),runnable);
+            }
         }
+        else { // khi click đọc nhanh
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    if(chapterData == null) {
+                        throw new RuntimeException(new Exception("Lỗi fetch chapterdata in des page"));
+                    }
 
+                    try {
+                        JSONObject firstChap = chapterData.getJSONObject(0);
+                        JSONObject  lastChap1 = chapterData.getJSONObject(chapterData.length()-1);
+                        Log.v("DEBUG firsstchap",firstChap.toString());
+//                        lastChap = firstChap;
+                        mTruyen.setFirstChap(firstChap.toString());
+                        mTruyen.setLastChap(lastChap1.toString());
+//                        mTruyen.setCheck(1);
+                    }
+                    catch (JSONException e) {
+                        Log.v("DEBUG","error save last chap and firstchap");
+                        throw new RuntimeException(e);
+                    }
+                    callback.onLoadChapJSON(mTruyen);
+                }
+            };
+            if(chapterData !=null){
+                runnable.run();
 
-
+            }else{
+                loadChapterData(mTruyen.getMangaId(),runnable);
+            }
+        }
+    }
+    public interface loadChapJSONCallback {
+        void onLoadChapJSON(Truyen mTruyen);
+    }
+    private static void freshDataTruyen(ArrayList<Truyen> data_Truyen) {
+        if (data_Truyen.size()>1){
+            LinkedHashSet<Truyen> uniqueTruyens = new LinkedHashSet<>(data_Truyen);
+            data_Truyen.clear();
+            data_Truyen.addAll(uniqueTruyens);
+        }
     }
 }

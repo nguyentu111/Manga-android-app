@@ -6,12 +6,13 @@ import java.io.Serializable;
 
 public class Truyen implements Serializable {
     String mangaId, mangaName, imgUrl, dataStr;
-    String currentReadChap=null, firstChap = null, lastChap =null;
+    String currentReadChap, firstChap = null, lastChap = null;
+    String currentReadChapJSONObject = null;
     int check;
     public Truyen() {
     }
 
-    public Truyen(String mangaId, String mangaName, String imgUrl, String dataStr, String lastChapter, int check) {
+    public Truyen(String mangaId, String mangaName, String imgUrl, String dataStr, int check) {
         this.mangaId = mangaId;
         this.mangaName = mangaName;
         this.imgUrl = imgUrl;
@@ -85,6 +86,14 @@ public class Truyen implements Serializable {
         this.lastChap = lastChap;
     }
 
+    public String getCurrentReadChapJSONObject() {
+        return currentReadChapJSONObject;
+    }
+
+    public void setCurrentReadChapJSONObject(String currentReadChapJSONObject) {
+        this.currentReadChapJSONObject = currentReadChapJSONObject;
+    }
+
     public void convertTruyen(Truyen truyen){
         this.mangaId = truyen.getMangaId();
         this.mangaName = truyen.getMangaName();
@@ -92,4 +101,5 @@ public class Truyen implements Serializable {
         this.dataStr = truyen.getDataStr();
         this.check = truyen.getCheck();
     }
+
 }

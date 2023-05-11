@@ -45,7 +45,7 @@ public class ChapterPage extends AppCompatActivity {
     ImageView back_to_des ;
     String dataStr;
 
-    public static ArrayList<Truyen> data_Truyen = new ArrayList<>();
+//    public static ArrayList<Truyen> data_Truyen = new ArrayList<>();
     Truyen mTruyen;
     Context context;
     @Override
@@ -185,19 +185,10 @@ public class ChapterPage extends AppCompatActivity {
                     one_chap_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            mTruyen.setCurrentReadChap(chapter.toString());
-                            mTruyen.setCheck(1);
-                            for (Truyen truyen1 : data_Truyen) {
-                                if (truyen1.getMangaId().equals(mangaId)) {
-                                    data_Truyen.remove(truyen1);
-                                    break;
-                                }
-                            }
-                            data_Truyen.add(0,mTruyen);
-                            LichSuFragment.loadTruyen(context);
 
                             String name= chapterName.getText().toString().trim();
                             Intent i = new Intent(ChapterPage.this, ReadManga.class);
+
                             i.putExtra("chapterId",chapterId);
                             i.putExtra("chapterName",name);
                             i.putExtra("mangaName",mangaName);
@@ -206,6 +197,8 @@ public class ChapterPage extends AppCompatActivity {
                             i.putExtra("mangaId",mangaId);
                             i.putExtra("coverUrl",coverUrl);
                             i.putExtra("chapStr",chapStr);
+                            i.putExtra("chapter",String.valueOf(chapter));
+                            i.putExtra("mTruyen",mTruyen);
                             startActivity(i);
                         }
                     });

@@ -105,7 +105,7 @@ public class MainActivityTrangChu extends AppCompatActivity {
                     if (KeSachFragment.data_Truyen.size() > 0){
                         KeSachFragment.data_Truyen.clear();
                         KeSachFragment.adapter_Truyen.notifyDataSetChanged();
-                        KeSachFragment.saveKeSach();
+                        KeSachFragment.saveKeSach(context);
                         Toast.makeText(MainActivityTrangChu.this, "Đã xóa truyện", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }

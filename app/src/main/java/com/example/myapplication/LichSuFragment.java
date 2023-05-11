@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,12 +19,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public class LichSuFragment extends Fragment {
     GridView gridView;
 
     static ChapterPage chapterPage = new ChapterPage();
-    static ArrayList<Truyen> data_Truyen = chapterPage.data_Truyen;
+    static ArrayList<Truyen> data_Truyen = ReadManga.data_Truyen;
     static AdapterTruyen adapter_Truyen;
     static Context context;
 
@@ -49,10 +51,18 @@ public class LichSuFragment extends Fragment {
             adapter_Truyen.notifyDataSetChanged();
         }
     }
+    private static void freshDataTruyen(ArrayList<Truyen> data_Truyen) {
+        if (data_Truyen.size()>1){
+            LinkedHashSet<Truyen> uniqueTruyens = new LinkedHashSet<>(data_Truyen);
+            data_Truyen.clear();
+            data_Truyen.addAll(uniqueTruyens);
+        }
+    }
+
+
     public static void loadTruyen(Context context) {
-        data_Truyen = chapterPage.data_Truyen;
-//        adapter_Truyen = new AdapterTruyen(context, R.layout.item_truyen, data_Truyen);
-//        adapter_Truyen.notifyDataSetChanged();
+        data_Truyen = ReadManga.data_Truyen;
+        freshDataTruyen(data_Truyen);
         saveLichSu(context);
     }
 
@@ -68,9 +78,10 @@ public class LichSuFragment extends Fragment {
             if (temp.size()>0){
                 data_Truyen.addAll(temp);
             }
-
             ois.close();
             fis.close();
+
+            freshDataTruyen(data_Truyen);
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -79,6 +90,12 @@ public class LichSuFragment extends Fragment {
 
     public static void saveLichSu(Context context) {
         try {
+            for (Truyen truyen : data_Truyen){
+                if (truyen.getMangaId()==null){
+                    Toast.makeText(context, "Loi luu lich su truyen", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+            }
             File file = File.createTempFile("dataLichSu", ".bin", context.getFilesDir());
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -96,4 +113,5 @@ public class LichSuFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
 }
