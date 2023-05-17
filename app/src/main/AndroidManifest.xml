@@ -40,7 +40,21 @@
         <activity
             android:name=".SearchHome"
             android:exported="true" />
-
+        <activity
+            android:name=".ForgotActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".ChatActivity"
+            android:exported="true"/>
 
         <activity
             android:name=".MainActivityTrangChu"

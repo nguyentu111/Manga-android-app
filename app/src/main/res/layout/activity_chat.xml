@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <Button
+            android:textColor="@color/white"
+            android:id="@+id/btn_switch_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Switch account" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:id="@+id/tv_current_account_id"
+            android:textSize="16sp"
+            />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_message"
+        android:layout_width="match_parent"
+        android:layout_height="568dp"
+        android:layout_below="@+id/top_layout"
+        android:divider="@null"
+        android:dividerHeight="0sp"
+        android:layout_above="@+id/layout_bottom"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp">
+
+    </ListView>
+
+    <RelativeLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp"
+        >
+
+        <EditText
+            android:id="@+id/edt_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter message"
+            android:layout_toStartOf="@+id/btn_send"
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            />
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Send"
+            android:textColor="@color/white"
+            android:layout_alignParentEnd="true"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -78,6 +78,15 @@ public class MainActivityTrangChu extends AppCompatActivity {
                     case R.id.action_kham_pha:
                         Intent intent = new Intent(MainActivityTrangChu.this, MainActivity.class);
                         startActivity(intent);
+                        break;
+                    case R.id.action_ca_nhan:
+                        Intent intent2 = new Intent(MainActivityTrangChu.this, UserActivity.class);
+                        startActivity(intent2);
+                        break;
+                    case R.id.action_cong_dong:
+                        Intent intent3 = new Intent(MainActivityTrangChu.this, ChatActivity.class);
+                        startActivity(intent3);
+                        break;
                 }
                 return false;
             }
