@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                         Toast.makeText(getApplicationContext(),"Welcome back!",Toast.LENGTH_LONG).show();
-                        Intent main = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent main = new Intent(LoginActivity.this, UserActivity.class);
                         startActivity(main);
                     }
                 });

@@ -103,7 +103,7 @@ public class SignupActivity extends AppCompatActivity {
                                     return;
                                 }
                                 Toast.makeText(getApplicationContext(), "Đăng kí thành công", Toast.LENGTH_LONG).show();
-                                Intent main = new Intent(SignupActivity.this, MainActivity.class);
+                                Intent main = new Intent(SignupActivity.this, UserActivity.class);
                                 startActivity(main);
                             }
                         });
