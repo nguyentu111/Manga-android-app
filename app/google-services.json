@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "171175133736",
+    "project_id": "login-manga-app",
+    "storage_bucket": "login-manga-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171175133736:android:bfcceb0a18f36319296b1d",
+        "android_client_info": {
+          "package_name": "com.example.giuaki"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "171175133736-4m3g3qrb9c2jjvuoss9d1s5t87s1vun4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4o5HvQc7zVUBdT4OK4IAdI6bgOfSuX70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "171175133736-4m3g3qrb9c2jjvuoss9d1s5t87s1vun4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171175133736:android:b4da91d9bda1762a296b1d",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "171175133736-4m3g3qrb9c2jjvuoss9d1s5t87s1vun4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4o5HvQc7zVUBdT4OK4IAdI6bgOfSuX70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "171175133736-4m3g3qrb9c2jjvuoss9d1s5t87s1vun4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
