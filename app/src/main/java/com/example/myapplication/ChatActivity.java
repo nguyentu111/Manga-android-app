@@ -36,7 +36,7 @@ public class ChatActivity extends AppCompatActivity {
     private Button btnSend;
 
     private TextView tvCurrentAccout;
-    private Button btnSwitchAccount;
+
 
     private ListView lvMessages;
 
@@ -120,7 +120,7 @@ public class ChatActivity extends AppCompatActivity {
         edtMessage = findViewById(R.id.edt_message);
         btnSend = findViewById(R.id.btn_send);
         lvMessages =findViewById(R.id.lv_message);
-        btnSwitchAccount = findViewById(R.id.btn_switch_account);
+
         tvCurrentAccout = findViewById(R.id.tv_current_account_id);
         tvCurrentAccout.setText("Current Account Name: "+currentUserName);
     }
