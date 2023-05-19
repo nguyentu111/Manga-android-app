@@ -57,22 +57,22 @@
             android:id="@+id/edt_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter message"
-            android:layout_toStartOf="@+id/btn_send"
-            android:layout_marginEnd="10dp"
             android:layout_centerVertical="true"
-            android:textSize="18sp"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/btn_send"
+            android:hint="Enter message"
+            android:minHeight="48dp"
             android:textColor="@android:color/black"
-            />
+            android:textSize="18sp" />
+
         <Button
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:text="Send"
-            android:textColor="@color/white"
-            android:layout_alignParentEnd="true"
-            />
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 

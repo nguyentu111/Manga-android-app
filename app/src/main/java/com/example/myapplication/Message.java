@@ -3,48 +3,39 @@ package com.example.myapplication;
 import java.util.Date;
 import java.text.*;
 public class Message {
-    private String message;
-    private Date time;
-
-    private int id;
-
-    public void setMessage(String message) {
-        this.message = message;
+    private String messageText;
+    private String messageUser;
+    private long messageTime;
+    public Message(String messageUser, String messageText) {
+        this.messageText = messageText;
+        this.messageUser = messageUser;
+        // Initialize to current time
+        messageTime = new Date().getTime();
     }
-
-    public String getMessage() {
-        return message;
+    public Message(String messageUser, String messageText, long time) {
+        this.messageText = messageText;
+        this.messageUser = messageUser;
+        // Initialize to current time
+        this.messageTime = time;
     }
-
-    public boolean isSameTime(Date time) {
-        if (time.getYear() == this.time.getYear()) {
-            if (time.getMonth() == this.time.getMonth()) {
-                if (time.getDate() == this.time.getDate()) {
-                    if (time.getHours() == this.time.getHours()) {
-                        if (time.getMinutes() == this.time.getMinutes()) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+    public Message(){
     }
-
-    public String getTimeString() {
-        SimpleDateFormat ft = new SimpleDateFormat ("hh:mm");
-        return ft.format(time);
+    public String getMessageText() {
+        return messageText;
     }
-
-    public Date getTime() {
-        return time;
+    public void setMessageText(String messageText) {
+        this.messageText = messageText;
     }
-
-    public int getId() { return id; }
-
-    public Message(String message, int id) {
-        this.message = message;
-        this.time = new Date();
-        this.id = id;
+    public String getMessageUser() {
+        return messageUser;
+    }
+    public void setMessageUser(String messageUser) {
+        this.messageUser = messageUser;
+    }
+    public long getMessageTime() {
+        return messageTime;
+    }
+    public void setMessageTime(long messageTime) {
+        this.messageTime = messageTime;
     }
 }

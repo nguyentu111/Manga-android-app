@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class MessageAdapter extends BaseAdapter {
@@ -15,15 +20,13 @@ public class MessageAdapter extends BaseAdapter {
     final ArrayList<Message> listMessages;
 
     MessageAdapter(ArrayList<Message> listMessages) {
+        Log.d("count", String.valueOf(listMessages.size()));
         this.listMessages = listMessages;
     }
 
 
     @Override
     public int getCount() {
-        if (listMessages == null){
-            return 0;
-        }
         return listMessages.size();
     }
 
@@ -48,36 +51,23 @@ public class MessageAdapter extends BaseAdapter {
         } else viewMessage = view;
 
         Message message = (Message) getItem(i);
-
-        TextView tvMessage = viewMessage.findViewById(R.id.tv_message);
-        TextView tvTime = viewMessage.findViewById(R.id.time);
-        LinearLayout llItemMessage = viewMessage.findViewById(R.id.item_message);
-
-        if (message.getId() != ChatActivity.currentUserId ){
-            tvMessage.setBackgroundResource(R.drawable.bg_white_corner_16);
-            tvMessage.setTextColor(Color.parseColor("#000000"));
-            llItemMessage.setGravity(Gravity.START);
+        TextView tvUser = viewMessage.findViewById(R.id.message_user);
+        TextView tvMessage = viewMessage.findViewById(R.id.message_text);
+        TextView tvTime = viewMessage.findViewById(R.id.message_time);
+        tvUser.setText(message.getMessageUser());
+        tvMessage.setText(message.getMessageText());
+        tvTime.setText(new SimpleDateFormat("HH:mm:ss").format(message.getMessageTime()));
+        Log.d("name", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        if(message.getMessageUser().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
+            LinearLayout l = (LinearLayout) viewMessage.findViewById(R.id.item_layout);
+            l.setGravity(Gravity.END);
+            tvUser.setText("Bạn");
         }
         else {
-            tvMessage.setBackgroundResource(R.drawable.bg_orange_corner_16);
-            tvMessage.setTextColor(Color.parseColor("#ffffff"));
-            llItemMessage.setGravity(Gravity.END);
-        }
-        if (i > 0){
-            if (!message.isSameTime(listMessages.get(i-1).getTime())){
-                tvTime.setMaxHeight(100);
-                tvTime.setText(message.getTimeString());
-            }
-            else{
-                tvTime.setMaxHeight(0);
-            }
-        }
-        else {
-            tvTime.setMaxHeight(100);
-            tvTime.setText(message.getTimeString());
+            LinearLayout l = (LinearLayout) viewMessage.findViewById(R.id.item_layout);
+            l.setGravity(Gravity.CENTER_VERTICAL);
         }
 
-        tvMessage.setText(message.getMessage());
 
         return viewMessage;
     }
