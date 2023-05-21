@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+
 
         //submit
         emailEdt = findViewById(R.id.edtEmailSignup);
@@ -80,8 +83,18 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                         Toast.makeText(getApplicationContext(),"Welcome back!",Toast.LENGTH_LONG).show();
-                        Intent main = new Intent(LoginActivity.this, UserActivity.class);
-                        startActivity(main);
+                        if(getCallingActivity()!=null) {
+                            Intent caller = new Intent();
+                            caller.putExtra("user", fAuth.getCurrentUser().getDisplayName());
+
+                            setResult(200, caller);
+                            finish();
+                        }
+                        else {
+                            Intent main = new Intent(LoginActivity.this, UserActivity.class);
+                            startActivity(main);
+                            finish();
+                        }
                     }
                 });
             }
@@ -97,5 +110,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            Log.d("on key down", String.valueOf(keyCode));
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

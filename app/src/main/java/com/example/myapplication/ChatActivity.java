@@ -1,5 +1,9 @@
 package com.example.myapplication;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +13,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -44,35 +49,66 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter messagesListViewAapter;
     public static String currentUserName;
     DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Db");
+
+    ActivityResultLauncher<Intent> loginIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode()==RESULT_OK) {
+                        Log.d("res", "res ok");
+                        recreate();
+                        Toast.makeText(getApplicationContext(), "Đăng nhập thành công", Toast.LENGTH_LONG).show();
+                    }
+                    if(result.getResultCode()==RESULT_CANCELED) {
+                        Intent myIntent = new Intent(getApplicationContext(), MainActivityTrangChu.class);
+                        startActivity(myIntent);
+                        finish();
+                    }
+                }
+            });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             // Start sign in/sign up activity
-            Intent login = new Intent(this, LoginActivity.class);
-            startActivity(login);
+            Intent login = new Intent(this, UserActivity.class);
+            loginIntent.launch(login);
+
         }
         else {
             currentUserName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
+            setContentView(R.layout.activity_chat);
+            setContentView();
+
+            btnSend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sentMessage();
+                }
+            });
+
+            edtMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    checkKeyboard();
+                }
+            });
+            displayMessage();
         }
+    }
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-        setContentView();
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sentMessage();
-            }
-        });
 
-        edtMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkKeyboard();
-            }
-        });
-        displayMessage();
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            Log.d("on key down", String.valueOf(keyCode));
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void displayMessage() {
@@ -83,7 +119,6 @@ public class ChatActivity extends AppCompatActivity {
                 mListMessage.clear();
                 for(DataSnapshot dt : snapshot.getChildren()) {
                     HashMap dtObject = (HashMap) dt.getValue();
-                    Log.d("count", dt.getValue().toString());
                     mListMessage.add(new Message((String) dtObject.get("messageUser"), (String) dtObject.get("messageText"), (Long) dtObject.get("messageTime")));
                 }
                 Log.d("mList", String.valueOf(mListMessage.size()));

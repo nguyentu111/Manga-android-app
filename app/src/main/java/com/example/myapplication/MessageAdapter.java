@@ -57,7 +57,7 @@ public class MessageAdapter extends BaseAdapter {
         tvUser.setText(message.getMessageUser());
         tvMessage.setText(message.getMessageText());
         tvTime.setText(new SimpleDateFormat("HH:mm:ss").format(message.getMessageTime()));
-        Log.d("name", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+
         if(message.getMessageUser().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
             LinearLayout l = (LinearLayout) viewMessage.findViewById(R.id.item_layout);
             l.setGravity(Gravity.END);
