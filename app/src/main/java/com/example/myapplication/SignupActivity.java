@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -102,14 +104,34 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(),"Đã xảy ra lỗi, hãy thử lại!",Toast.LENGTH_LONG).show();
                                     return;
                                 }
-                                Toast.makeText(getApplicationContext(), "Đăng kí thành công", Toast.LENGTH_LONG).show();
-                                Intent main = new Intent(SignupActivity.this, UserActivity.class);
-                                startActivity(main);
+
+                                if(getCallingActivity()!=null) {
+                                    Intent caller = new Intent();
+                                    caller.putExtra("user", fAuth.getCurrentUser().getDisplayName());
+
+                                    setResult(201, caller);
+                                }
+                                else {
+                                    Toast.makeText(getApplicationContext(), "Đăng kí thành công", Toast.LENGTH_LONG).show();
+                                    Intent main = new Intent(SignupActivity.this, UserActivity.class);
+                                    startActivity(main);
+                                }
+                                finish();
                             }
                         });
                     }
                 });
             }
         });
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            Log.d("on key down", String.valueOf(keyCode));
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

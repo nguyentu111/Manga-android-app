@@ -1,15 +1,21 @@
 package com.example.myapplication;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,6 +25,31 @@ public class UserActivity extends AppCompatActivity {
     private Button btnDN, btnDK;
     private ImageView btnLogout;
     private TextView userName, status;
+    private FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    ActivityResultLauncher<Intent> callIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode()==200) {
+                        Toast.makeText(getApplicationContext(), "Đăng nhập thành công", Toast.LENGTH_LONG).show();
+                        Intent caller = new Intent();
+                        caller.putExtra("user", fAuth.getCurrentUser().getDisplayName());
+                        Log.d("res", "200");
+                        setResult(RESULT_OK, caller);
+                        finish();
+                        return;
+                    }
+                    if(result.getResultCode()==201) {
+                        Toast.makeText(getApplicationContext(), "Đăng kí thành công", Toast.LENGTH_LONG).show();
+                        Intent caller = new Intent();
+                        caller.putExtra("user", fAuth.getCurrentUser().getDisplayName());
+
+                        setResult(RESULT_OK, caller);
+                        finish();
+                        return;
+                    }
+                }
+            });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +59,8 @@ public class UserActivity extends AppCompatActivity {
         ivPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent caller = new Intent();
+                setResult(RESULT_CANCELED, caller);
                 finish();
             }
         });
@@ -48,11 +81,9 @@ public class UserActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     FirebaseAuth.getInstance().signOut();
-                    userName.setText("Khách");
-                    status.setText("Chưa đăng nhập");
-                    btnLogout.setVisibility(View.INVISIBLE);
-                    btnDN.setVisibility(View.VISIBLE);
-                    btnDK.setVisibility(View.VISIBLE);
+                    Intent myIntent = new Intent(UserActivity.this, UserActivity.class);
+                    startActivity(myIntent);
+                    finish();
                 }
             });
             status.setText("");
@@ -69,8 +100,15 @@ public class UserActivity extends AppCompatActivity {
         btnDN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(UserActivity.this, LoginActivity.class);
-                startActivity(myIntent);
+                if(getCallingActivity()!=null) {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    callIntent.launch(intent);
+                }
+                else {
+                    Intent myIntent = new Intent(UserActivity.this, LoginActivity.class);
+                    startActivity(myIntent);
+                    finish();
+                }
             }
         });
 
@@ -78,8 +116,15 @@ public class UserActivity extends AppCompatActivity {
         btnDK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(UserActivity.this, SignupActivity.class);
-                startActivity(myIntent);
+                if(getCallingActivity()!=null) {
+                    Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+                    callIntent.launch(intent);
+                }
+                else {
+                    Intent myIntent = new Intent(UserActivity.this, SignupActivity.class);
+                    startActivity(myIntent);
+                    finish();
+                }
             }
         });
     }
