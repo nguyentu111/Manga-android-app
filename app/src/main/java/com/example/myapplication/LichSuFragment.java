@@ -19,7 +19,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class LichSuFragment extends Fragment {
     GridView gridView;
@@ -53,9 +56,16 @@ public class LichSuFragment extends Fragment {
     }
     private static void freshDataTruyen(ArrayList<Truyen> data_Truyen) {
         if (data_Truyen.size()>1){
-            LinkedHashSet<Truyen> uniqueTruyens = new LinkedHashSet<>(data_Truyen);
-            data_Truyen.clear();
-            data_Truyen.addAll(uniqueTruyens);
+            Set<String> seenMangaIds = new HashSet<>();
+            Iterator<Truyen> iterator = data_Truyen.iterator();
+            while (iterator.hasNext()) {
+                Truyen truyen = iterator.next();
+                if (seenMangaIds.contains(truyen.getMangaId())) {
+                    iterator.remove();
+                } else {
+                    seenMangaIds.add(truyen.getMangaId());
+                }
+            }
         }
     }
 
@@ -90,12 +100,7 @@ public class LichSuFragment extends Fragment {
 
     public static void saveLichSu(Context context) {
         try {
-            for (Truyen truyen : data_Truyen){
-                if (truyen.getMangaId()==null){
-                    Toast.makeText(context, "Loi luu lich su truyen", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-            }
+
             File file = File.createTempFile("dataLichSu", ".bin", context.getFilesDir());
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);

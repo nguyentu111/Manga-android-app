@@ -104,10 +104,9 @@ public class ReadManga extends AppCompatActivity implements ActionBottomDialogFr
 
         mTruyen.setCheck(1);
         data_Truyen.add(0, mTruyen);
-        freshDataTruyen(data_Truyen);
 
         LichSuFragment.loadTruyen(context);
-        Toast.makeText(context, "ĐANG ĐỌC TRUYỆN", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "ĐANG ĐỌC TRUYỆN", Toast.LENGTH_SHORT).show();
 
         loadPages(pagesLayout, chapterId, this);
 
@@ -143,14 +142,6 @@ public class ReadManga extends AppCompatActivity implements ActionBottomDialogFr
             }
         });
 
-    }
-
-    private static void freshDataTruyen(ArrayList<Truyen> data_Truyen) {
-        if (data_Truyen.size()>1){
-            LinkedHashSet<Truyen> uniqueTruyens = new LinkedHashSet<>(data_Truyen);
-            data_Truyen.clear();
-            data_Truyen.addAll(uniqueTruyens);
-        }
     }
 
     public void showBottomSheet() {

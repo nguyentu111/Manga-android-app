@@ -415,7 +415,6 @@ public class DescriptionPage extends AppCompatActivity {
                     }
 
                     data_Truyen.add(0,mTruyenKS);
-                    freshDataTruyen(data_Truyen);
                     KeSachFragment.loadTruyen(context);
                     Toast.makeText(context, "Lưu thành công",Toast.LENGTH_SHORT).show();
                 }
@@ -462,11 +461,5 @@ public class DescriptionPage extends AppCompatActivity {
     public interface loadChapJSONCallback {
         void onLoadChapJSON(Truyen mTruyen);
     }
-    private static void freshDataTruyen(ArrayList<Truyen> data_Truyen) {
-        if (data_Truyen.size()>1){
-            LinkedHashSet<Truyen> uniqueTruyens = new LinkedHashSet<>(data_Truyen);
-            data_Truyen.clear();
-            data_Truyen.addAll(uniqueTruyens);
-        }
-    }
+
 }
